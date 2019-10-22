@@ -231,15 +231,7 @@ public class LinkedLists {
 		runTest1(list, arrayOfInts);
 		runTest2(list, arrayOfInts);		
 		runTest3();
-		
-		final LinkedListDataStructure<Integer> listReversed = list.reverse();
-		
-		for (int i = 0; i < list.size(); i++) {
-			final Integer nextInt = list.get(i);
-			final Integer revNextInt = listReversed.get(i);
-			
-			System.out.format("Element value at index %d: %s, reversed %s%n", i, nextInt, revNextInt);
-		}
+		runTest4(list, arrayOfInts);
 	}
 	
 	private static void runTest1(final LinkedListDataStructure<Integer> list, final Integer[] arrayOfInts) {
@@ -307,6 +299,17 @@ public class LinkedLists {
 			final Integer nextInt2 = list2.get(i);
 			
 			System.out.format("Element value at index %d: %s, expected %s%n", i, nextInt2, nextInt);
+		}
+	}
+	
+	private static void runTest4(final LinkedListDataStructure<Integer> list, final Integer[] arrayOfInts) {
+		final LinkedListDataStructure<Integer> listReversed = list.reverse();
+		
+		for (int i = 0; i < list.size(); i++) {
+			final Integer nextInt = list.get(i);
+			final Integer revNextInt = listReversed.get(i);
+			
+			System.out.format("Element value at index %d: %s, reversed %s ==> is reversed: %s%n", i, nextInt, revNextInt, list.get(i).equals(listReversed.get(12 - i)));
 		}
 	}
 
