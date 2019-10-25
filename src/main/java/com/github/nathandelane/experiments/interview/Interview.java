@@ -1,6 +1,5 @@
 package com.github.nathandelane.experiments.interview;
 
-
 public class Interview {
 
 	public static void reverseCharArray(char[] input) {
@@ -48,6 +47,81 @@ public class Interview {
 			
 			currentIndex++;
 		}
+	}
+	
+	public static void test() {
+		String[] grid = new String[] { "....", "....", "...." };
+		
+		int numberOfWays = 0;
+    int gridWidth = grid[0].length();
+    int gridHeight = grid.length;
+
+    String linearGrid = "";
+
+    for (final String next : grid) {
+        linearGrid += next;
+    }
+
+    if (linearGrid.indexOf(".") > -1) {
+        
+    }
+    else {
+        numberOfWays = 1;
+    }
+
+    System.out.println(numberOfWays);
+	}
+	
+	private static final int[][] UPRIGHT_L = new int[][] { { 0, 0 }, { 0, 1 }, { 0, 2 }, { 1, 2 }};
+	private static final int[][] TURNED_90 = new int[][] { { 0, 0 }, { 1, 0 }, { 2, 0 }, { 0, 1 }};
+	private static final int[][] TURNED_180 = new int[][] { { 0, 0 }, { 1, 0 }, { 1, 1 }, { 1, 2 }};
+	private static final int[][] TURNED_270 = new int[][] { { 2, 0 }, { 0, 1 }, { 1, 1 }, { 2, 1 }};
+	
+	static String drawL(int orientation, String linearGrid, int width) {
+	    char[] arr = linearGrid.toCharArray();
+	
+	    if (orientation == 1) { // upright L
+	    	arr = applyPattern(arr, UPRIGHT_L, width);
+	    }
+	    else if (orientation == 2) { // turned 90 degrees
+	    	arr = applyPattern(arr, TURNED_90, width);
+	    }
+	    else if (orientation == 3) { // turned 180 degrees
+	    	arr = applyPattern(arr, TURNED_180, width);
+	    }
+	    else { // turned 270 degrees
+	    	arr = applyPattern(arr, TURNED_270, width);
+	    }
+	
+	    return new String(arr);
+	}
+	
+	static char[] applyPattern(char[] arr, int[][] pattern, int width) {
+	    final char[] copy = new char[arr.length];
+	
+	    System.arraycopy(arr, 0, copy, 0, arr.length);
+	
+	    boolean completed = true;
+	
+	    for (final int[] next : pattern) {
+	        int x = next[0];
+	        int y = next[1];
+	
+	        if (copy[(y * width) + x] == '.') {
+	            copy[(y * width) + x] = 'L';
+	        }
+	        else {
+	            completed = false;
+	            break;
+	        }
+	    }
+	    
+	    if (completed) {
+	    	return copy;
+	    }
+	    else {
+	    	return arr;
+	    }
 	}
 	
 	public static void main(String[] args) {
