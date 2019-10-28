@@ -10,58 +10,6 @@ public class RotateMatrix {
 		return ((minDim / 2) + (minDim % 2));
 	}
 	
-	static int[] adjacentClockwise(final int width, final int height, final int n, final int m) {
-		int newN = n;
-		int newM = m;
-		
-		if (width > 1 && height > 1) {
-			if (n + 1 == width) { // Right side of matrix
-				if (m + 1 == height) { // Bottom of matrix
-					newN -= 1;
-				}
-				else { // Before bottom right corner of matrix
-					newM += 1;
-				}
-			}
-			else if (n == 0) { // Left side of matrix
-				if (m + 1 == height || m > 0) { // Bottom or middle of left side
-					newM -= 1;
-				}
-				else {
-					newN += 1;
-				}
-			}
-			else {
-				if (m == 0) {
-					newN += 1;
-				}
-				else {
-					newN -= 1;
-				}
-			}
-		}
-		else {
-			if (width == 1) {
-				if (m + 1 == height) {
-					newM = 0;
-				}
-				else {
-					newM += 1;
-				}
-			}
-			else if (height == 1) {
-				if (n + 1 == width) {
-					newN = 0;
-				}
-				else {
-					newN += 1;
-				}
-			}
-		}
-		
-		return new int[] { newN, newM };
-	}
-	
 	static int[][] deepCopyMatrix(final int[][] matrix) {
 		final int width = matrix.length;
 		final int height = matrix[0].length;
@@ -76,24 +24,110 @@ public class RotateMatrix {
 		return deepCopy;
 	}
 	
+	static int[][] matrixOfSameSize(final int[][] matrix) {
+		final int width = matrix.length;
+		final int height = matrix[0].length;
+		final int[][] matrixOfSameSize = new int[width][height];
+		
+		return matrixOfSameSize;
+	}
+	
+	static int[] nextSpaceInMatrixClockwise(final int ringWidth, final int ringHeight, final int column, final int row) {
+		int newN = column;
+		int newM = row;
+		
+		if (column + 1 == ringWidth) { // Right side checks
+			if (row + 1 == ringHeight) { // Bottom
+				newN -= 1;
+			}
+			else { // Top
+				newM += 1;
+			}
+		}
+		else if (column == 0) { // Left side
+			if (row + 1 == ringHeight) { // Bottom
+				newM -= 1;
+			}
+			else { // Top
+				newN += 1;
+			}
+		}
+		else if (column + 1 < ringWidth && column > 0) {
+			if (row == 0) {
+				newN += 1;
+			}
+			else {
+				newN -= 1;
+			}
+		}
+		else if (row + 1 < ringHeight && row > 0) {
+			if (column == 0) {
+				newM -= 1;
+			}
+			else {
+				newM += 1;
+			}
+		}
+//		else {
+//			if (m == 0) {
+//				newN += 1;
+//			}
+//			else if (m + 1 == ringHeight) {
+//				newN -= 1;
+//			}
+//			else if (n == 0) {
+//				newM -= 1;
+//			}
+//			else if (n + 1 == ringWidth) {
+//				newM += 1;
+//			}
+//		}
+		
+		return new int[] { newN, newM };
+	}
+	
 	static int[][] rotateMatrixClockwise(final int[][] matrix) {
-		final int[][] rotatedMatrix = deepCopyMatrix(matrix);
-		final int numberOfRings = numberOfRings(matrix);
+		final int[][] rotatedMatrix = matrixOfSameSize(matrix);
 		
 		final int width = matrix.length;
 		final int height = matrix[0].length;
+		final int numberOfRings = numberOfRings(matrix);
 		
 		if (width > 1 || height > 1) {
 			for (int ringNumber = 0; ringNumber < numberOfRings; ringNumber++) {
-				final int ringWidth = width - (ringNumber * 2);
-				final int ringHeight = height - (ringNumber * 2);
+				final int ringWidth = (width - (ringNumber * 2));
+				final int ringHeight = (height - (ringNumber * 2));
 				
-				for (int n = ringNumber; n < ringWidth; n++) {
-					for (int m = ringNumber; m < ringHeight; m++) {
-						final int[] nextLocation = adjacentClockwise(width, height, n, m);
-						
-						rotatedMatrix[n][m] = matrix[nextLocation[0]][nextLocation[1]];
-					}
+				// Top
+				int m = 0;
+				
+				for (int n = 0; n < ringWidth; n++) {
+					final int actualN = ringNumber + n;
+					final int actualM = ringNumber + m;
+					
+					final int currentValue = matrix[actualN][actualM];
+					final int[] newLocation = nextSpaceInMatrixClockwise(ringWidth, ringHeight, n, m);
+					
+					final int newN = newLocation[0];
+					final int newM = newLocation[1];
+					
+					rotatedMatrix[newM][newN] = currentValue;
+				}
+				
+				// Bottom
+				m = ringHeight - 1;
+
+				for (int n = 0; n < ringWidth; n++) {
+					final int actualN = ringWidth - ringNumber - n - 1;
+					final int actualM = ringNumber + m;
+					
+					final int currentValue = matrix[actualN][actualM];
+					final int[] newLocation = nextSpaceInMatrixClockwise(ringWidth, ringHeight, n, m);
+					
+					final int newN = newLocation[0];
+					final int newM = newLocation[1];
+					
+					rotatedMatrix[newM][newN] = currentValue;
 				}
 			}
 		}
@@ -119,8 +153,8 @@ public class RotateMatrix {
 		final int width = expected.length;
 		final int height = expected[0].length;
 		
-		for (int n = 0; n < width; n++) {
-			for (int m = 0; m < height; m++) {
+		for (int m = 0; m < height; m++) {
+			for (int n = 0; n < width; n++) {
 				if (rotated[n][m] != expected[n][m]) {
 					return false;
 				}
@@ -152,8 +186,8 @@ public class RotateMatrix {
 			final int height = input.nextInt();
 			final int[][] matrix = new int[width][height];
 			
-			for (int n = 0; n < width; n++) {
-				for (int m = 0; m < height; m++) {
+			for (int m = 0; m < height; m++) {
+				for (int n = 0; n < width; n++) {
 					matrix[n][m] = input.nextInt();
 				}
 			}

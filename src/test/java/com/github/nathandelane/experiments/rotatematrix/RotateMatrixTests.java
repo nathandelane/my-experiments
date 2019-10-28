@@ -89,279 +89,51 @@ public class RotateMatrixTests {
 	}
 	
 	@Test
-	public void testAdjacentClockwise1x1() {
-		final int width = 1;
-		final int height = 1;
+	public void testNextSpaceInMatrixClockwise2x2_0_0() {
+		final int ringWidth = 2;
+		final int ringHeight = 2;
 		final int n = 0;
 		final int m = 0;
 		
-		final int[] adjacentPostition = RotateMatrix.adjacentClockwise(width, height, n, m);
+		final int[] newPoint = RotateMatrix.nextSpaceInMatrixClockwise(ringWidth, ringHeight, n, m);
 		
-		assertTrue(Arrays.equals(new int[] { 0, 0 }, adjacentPostition));
+		assertTrue(Arrays.equals(new int[] { 1, 0 }, newPoint));
 	}
 	
 	@Test
-	public void testAdjacentClockwise2x2Position0_0() {
-		final int width = 2;
-		final int height = 2;
-		final int n = 0;
-		final int m = 0;
-		
-		final int[] adjacentPostition = RotateMatrix.adjacentClockwise(width, height, n, m);
-		
-		assertTrue(Arrays.equals(new int[] { 1, 0 }, adjacentPostition));
-	}
-
-	@Test
-	public void testAdjacentClockwise2x2Position1_0() {
-		final int width = 2;
-		final int height = 2;
+	public void testNextSpaceInMatrixClockwise2x2_1_0() {
+		final int ringWidth = 2;
+		final int ringHeight = 2;
 		final int n = 1;
 		final int m = 0;
 		
-		final int[] adjacentPostition = RotateMatrix.adjacentClockwise(width, height, n, m);
+		final int[] newPoint = RotateMatrix.nextSpaceInMatrixClockwise(ringWidth, ringHeight, n, m);
 		
-		assertTrue(Arrays.equals(new int[] { 1, 1 }, adjacentPostition));
+		assertTrue(Arrays.equals(new int[] { 1, 1 }, newPoint));
 	}
-
+	
 	@Test
-	public void testAdjacentClockwise2x2Position1_1() {
-		final int width = 2;
-		final int height = 2;
+	public void testNextSpaceInMatrixClockwise2x2_1_1() {
+		final int ringWidth = 2;
+		final int ringHeight = 2;
 		final int n = 1;
 		final int m = 1;
 		
-		final int[] adjacentPostition = RotateMatrix.adjacentClockwise(width, height, n, m);
+		final int[] newPoint = RotateMatrix.nextSpaceInMatrixClockwise(ringWidth, ringHeight, n, m);
 		
-		assertTrue(Arrays.equals(new int[] { 0, 1 }, adjacentPostition));
+		assertTrue(Arrays.equals(new int[] { 0, 1 }, newPoint));
 	}
-
+	
 	@Test
-	public void testAdjacentClockwise2x2Position0_1() {
-		final int width = 2;
-		final int height = 2;
+	public void testNextSpaceInMatrixClockwise2x2_0_1() {
+		final int ringWidth = 2;
+		final int ringHeight = 2;
 		final int n = 0;
 		final int m = 1;
 		
-		final int[] adjacentPostition = RotateMatrix.adjacentClockwise(width, height, n, m);
+		final int[] newPoint = RotateMatrix.nextSpaceInMatrixClockwise(ringWidth, ringHeight, n, m);
 		
-		assertTrue(Arrays.equals(new int[] { 0, 0 }, adjacentPostition));
-	}
-
-	@Test
-	public void testAdjacentClockwise3x3Position0_0() {
-		final int width = 3;
-		final int height = 3;
-		final int n = 0;
-		final int m = 0;
-		
-		final int[] adjacentPostition = RotateMatrix.adjacentClockwise(width, height, n, m);
-		
-		assertTrue(Arrays.equals(new int[] { 1, 0 }, adjacentPostition));
-	}
-
-	@Test
-	public void testAdjacentClockwise3x3Position1_0() {
-		final int width = 3;
-		final int height = 3;
-		final int n = 1;
-		final int m = 0;
-		
-		final int[] adjacentPostition = RotateMatrix.adjacentClockwise(width, height, n, m);
-		
-		assertTrue(Arrays.equals(new int[] { 2, 0 }, adjacentPostition));
-	}
-
-	@Test
-	public void testAdjacentClockwise3x3Position2_0() {
-		final int width = 3;
-		final int height = 3;
-		final int n = 2;
-		final int m = 0;
-		
-		final int[] adjacentPostition = RotateMatrix.adjacentClockwise(width, height, n, m);
-		
-		assertTrue(Arrays.equals(new int[] { 2, 1 }, adjacentPostition));
-	}
-
-	@Test
-	public void testAdjacentClockwise3x3Position2_1() {
-		final int width = 3;
-		final int height = 3;
-		final int n = 2;
-		final int m = 1;
-		
-		final int[] adjacentPostition = RotateMatrix.adjacentClockwise(width, height, n, m);
-		
-		assertTrue(Arrays.equals(new int[] { 2, 2 }, adjacentPostition));
-	}
-
-	@Test
-	public void testAdjacentClockwise3x3Position2_2() {
-		final int width = 3;
-		final int height = 3;
-		final int n = 2;
-		final int m = 2;
-		
-		final int[] adjacentPostition = RotateMatrix.adjacentClockwise(width, height, n, m);
-		
-		assertTrue(Arrays.equals(new int[] { 1, 2 }, adjacentPostition));
-	}
-
-	@Test
-	public void testAdjacentClockwise3x3Position1_2() {
-		final int width = 3;
-		final int height = 3;
-		final int n = 1;
-		final int m = 2;
-		
-		final int[] adjacentPostition = RotateMatrix.adjacentClockwise(width, height, n, m);
-		
-		assertTrue(Arrays.equals(new int[] { 0, 2 }, adjacentPostition));
-	}
-
-	@Test
-	public void testAdjacentClockwise3x3Position0_2() {
-		final int width = 3;
-		final int height = 3;
-		final int n = 0;
-		final int m = 2;
-		
-		final int[] adjacentPostition = RotateMatrix.adjacentClockwise(width, height, n, m);
-		
-		assertTrue(Arrays.equals(new int[] { 0, 1 }, adjacentPostition));
-	}
-
-	@Test
-	public void testAdjacentClockwise3x3Position0_1() {
-		final int width = 3;
-		final int height = 3;
-		final int n = 0;
-		final int m = 1;
-		
-		final int[] adjacentPostition = RotateMatrix.adjacentClockwise(width, height, n, m);
-		
-		assertTrue(Arrays.equals(new int[] { 0, 0 }, adjacentPostition));
-	}
-	
-	@Test
-	public void testAdjacentClockwise4x3Position0_0() {
-		final int width = 4;
-		final int height = 3;
-		final int n = 0;
-		final int m = 0;
-		
-		final int[] adjacentPostition = RotateMatrix.adjacentClockwise(width, height, n, m);
-		
-		assertTrue(Arrays.equals(new int[] { 1, 0 }, adjacentPostition));
-	}
-	
-	@Test
-	public void testAdjacentClockwise4x3Position1_0() {
-		final int width = 4;
-		final int height = 3;
-		final int n = 1;
-		final int m = 0;
-		
-		final int[] adjacentPostition = RotateMatrix.adjacentClockwise(width, height, n, m);
-		
-		assertTrue(Arrays.equals(new int[] { 2, 0 }, adjacentPostition));
-	}
-	
-	@Test
-	public void testAdjacentClockwise4x3Position2_0() {
-		final int width = 4;
-		final int height = 3;
-		final int n = 2;
-		final int m = 0;
-		
-		final int[] adjacentPostition = RotateMatrix.adjacentClockwise(width, height, n, m);
-		
-		assertTrue(Arrays.equals(new int[] { 3, 0 }, adjacentPostition));
-	}
-	
-	@Test
-	public void testAdjacentClockwise4x3Position3_0() {
-		final int width = 4;
-		final int height = 3;
-		final int n = 3;
-		final int m = 0;
-		
-		final int[] adjacentPostition = RotateMatrix.adjacentClockwise(width, height, n, m);
-		
-		assertTrue(Arrays.equals(new int[] { 3, 1 }, adjacentPostition));
-	}
-	
-	@Test
-	public void testAdjacentClockwise4x3Position3_1() {
-		final int width = 4;
-		final int height = 3;
-		final int n = 3;
-		final int m = 1;
-		
-		final int[] adjacentPostition = RotateMatrix.adjacentClockwise(width, height, n, m);
-		
-		assertTrue(Arrays.equals(new int[] { 3, 2 }, adjacentPostition));
-	}
-	
-	@Test
-	public void testAdjacentClockwise4x3Position3_2() {
-		final int width = 4;
-		final int height = 3;
-		final int n = 3;
-		final int m = 2;
-		
-		final int[] adjacentPostition = RotateMatrix.adjacentClockwise(width, height, n, m);
-		
-		assertTrue(Arrays.equals(new int[] { 2, 2 }, adjacentPostition));
-	}
-	
-	@Test
-	public void testAdjacentClockwise4x3Position2_2() {
-		final int width = 4;
-		final int height = 3;
-		final int n = 2;
-		final int m = 2;
-		
-		final int[] adjacentPostition = RotateMatrix.adjacentClockwise(width, height, n, m);
-		
-		assertTrue(Arrays.equals(new int[] { 1, 2 }, adjacentPostition));
-	}
-	
-	@Test
-	public void testAdjacentClockwise4x3Position1_2() {
-		final int width = 4;
-		final int height = 3;
-		final int n = 1;
-		final int m = 2;
-		
-		final int[] adjacentPostition = RotateMatrix.adjacentClockwise(width, height, n, m);
-		
-		assertTrue(Arrays.equals(new int[] { 0, 2 }, adjacentPostition));
-	}
-	
-	@Test
-	public void testAdjacentClockwise4x3Position0_2() {
-		final int width = 4;
-		final int height = 3;
-		final int n = 0;
-		final int m = 2;
-		
-		final int[] adjacentPostition = RotateMatrix.adjacentClockwise(width, height, n, m);
-		
-		assertTrue(Arrays.equals(new int[] { 0, 1 }, adjacentPostition));
-	}
-	
-	@Test
-	public void testAdjacentClockwise4x3Position0_1() {
-		final int width = 4;
-		final int height = 3;
-		final int n = 0;
-		final int m = 1;
-		
-		final int[] adjacentPostition = RotateMatrix.adjacentClockwise(width, height, n, m);
-		
-		assertTrue(Arrays.equals(new int[] { 0, 0 }, adjacentPostition));
+		assertTrue(Arrays.equals(new int[] { 0, 0 }, newPoint));
 	}
 	
 	@Test
@@ -374,8 +146,8 @@ public class RotateMatrixTests {
 	
 	@Test
 	public void testRotateMatrixClockwise2x2() {
-		final int[][] matrix = new int[][] { { 1, 2 }, { 3, 4 } };
-		final int[][] expectedMatrix = new int[][] { { 3, 1 }, { 4, 2 } };
+		final int[][] matrix = new int[][] { { 1, 2 }, { 4, 3 } };
+		final int[][] expectedMatrix = new int[][] { { 4, 1 }, { 3, 2 } };
 		final int[][] rotatedMatrix = RotateMatrix.rotateMatrixClockwise(matrix);
 		
 		for (int i = 0; i < rotatedMatrix.length; i++) {
