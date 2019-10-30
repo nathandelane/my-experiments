@@ -11,7 +11,7 @@ public class RotateMatrixTests {
 	@Test
 	public void testNumberOfRings1x1() {
 		final int[][] matrix = new int[][] { { 1 } };
-		final int numberOfRings = RotateMatrix.numberOfRings(matrix);
+		final int numberOfRings = RotateMatrix.numberOfLoops(matrix);
 		
 		assertTrue(numberOfRings == 1);
 	}
@@ -19,7 +19,7 @@ public class RotateMatrixTests {
 	@Test
 	public void testNumberOfRings1x2() {
 		final int[][] matrix = new int[][] { { 1, 2 } };
-		final int numberOfRings = RotateMatrix.numberOfRings(matrix);
+		final int numberOfRings = RotateMatrix.numberOfLoops(matrix);
 		
 		assertTrue(numberOfRings == 1);
 	}
@@ -27,7 +27,7 @@ public class RotateMatrixTests {
 	@Test
 	public void testNumberOfRings2x1() {
 		final int[][] matrix = new int[][] { { 1 }, { 2 } };
-		final int numberOfRings = RotateMatrix.numberOfRings(matrix);
+		final int numberOfRings = RotateMatrix.numberOfLoops(matrix);
 		
 		assertTrue(numberOfRings == 1);
 	}
@@ -35,7 +35,7 @@ public class RotateMatrixTests {
 	@Test
 	public void testNumberOfRings2x2() {
 		final int[][] matrix = new int[][] { { 1, 2 }, { 3, 4 } };
-		final int numberOfRings = RotateMatrix.numberOfRings(matrix);
+		final int numberOfRings = RotateMatrix.numberOfLoops(matrix);
 		
 		assertTrue(numberOfRings == 1);
 	}
@@ -43,7 +43,7 @@ public class RotateMatrixTests {
 	@Test
 	public void testNumberOfRings2x3() {
 		final int[][] matrix = new int[][] { { 1, 2, 3 }, { 4, 5, 6 } };
-		final int numberOfRings = RotateMatrix.numberOfRings(matrix);
+		final int numberOfRings = RotateMatrix.numberOfLoops(matrix);
 		
 		assertTrue(numberOfRings == 1);
 	}
@@ -51,7 +51,7 @@ public class RotateMatrixTests {
 	@Test
 	public void testNumberOfRings3x2() {
 		final int[][] matrix = new int[][] { { 1, 2 }, { 3, 4 }, { 5, 6 } };
-		final int numberOfRings = RotateMatrix.numberOfRings(matrix);
+		final int numberOfRings = RotateMatrix.numberOfLoops(matrix);
 		
 		assertTrue(numberOfRings == 1);
 	}
@@ -59,7 +59,7 @@ public class RotateMatrixTests {
 	@Test
 	public void testNumberOfRings3x3() {
 		final int[][] matrix = new int[][] { { 1, 2, 3 }, { 4, 5, 6 }, { 7, 8, 9 } };
-		final int numberOfRings = RotateMatrix.numberOfRings(matrix);
+		final int numberOfRings = RotateMatrix.numberOfLoops(matrix);
 		
 		assertTrue(numberOfRings == 2);
 	}
@@ -67,7 +67,7 @@ public class RotateMatrixTests {
 	@Test
 	public void testNumberOfRings3x4() {
 		final int[][] matrix = new int[][] { { 1, 2, 3, 4 }, { 5, 6, 7, 8 }, { 9, 10, 11, 12 } };
-		final int numberOfRings = RotateMatrix.numberOfRings(matrix);
+		final int numberOfRings = RotateMatrix.numberOfLoops(matrix);
 		
 		assertTrue(numberOfRings == 2);
 	}
@@ -75,7 +75,7 @@ public class RotateMatrixTests {
 	@Test
 	public void testNumberOfRings4x3() {
 		final int[][] matrix = new int[][] { { 1, 2, 3 }, { 4, 5, 6 }, { 7, 8, 9 }, { 10, 11, 12 } };
-		final int numberOfRings = RotateMatrix.numberOfRings(matrix);
+		final int numberOfRings = RotateMatrix.numberOfLoops(matrix);
 		
 		assertTrue(numberOfRings == 2);
 	}
@@ -83,57 +83,9 @@ public class RotateMatrixTests {
 	@Test
 	public void testNumberOfRings4x4() {
 		final int[][] matrix = new int[][] { { 1, 2, 3, 0 }, { 4, 5, 6, 0 }, { 7, 8, 9, 0 }, { 10, 11, 12, 0 } };
-		final int numberOfRings = RotateMatrix.numberOfRings(matrix);
+		final int numberOfRings = RotateMatrix.numberOfLoops(matrix);
 		
 		assertTrue(numberOfRings == 2);
-	}
-	
-	@Test
-	public void testNextSpaceInMatrixClockwise2x2_0_0() {
-		final int ringWidth = 2;
-		final int ringHeight = 2;
-		final int n = 0;
-		final int m = 0;
-		
-		final int[] newPoint = RotateMatrix.nextSpaceInMatrixClockwise(ringWidth, ringHeight, n, m);
-		
-		assertTrue(Arrays.equals(new int[] { 1, 0 }, newPoint));
-	}
-	
-	@Test
-	public void testNextSpaceInMatrixClockwise2x2_1_0() {
-		final int ringWidth = 2;
-		final int ringHeight = 2;
-		final int n = 1;
-		final int m = 0;
-		
-		final int[] newPoint = RotateMatrix.nextSpaceInMatrixClockwise(ringWidth, ringHeight, n, m);
-		
-		assertTrue(Arrays.equals(new int[] { 1, 1 }, newPoint));
-	}
-	
-	@Test
-	public void testNextSpaceInMatrixClockwise2x2_1_1() {
-		final int ringWidth = 2;
-		final int ringHeight = 2;
-		final int n = 1;
-		final int m = 1;
-		
-		final int[] newPoint = RotateMatrix.nextSpaceInMatrixClockwise(ringWidth, ringHeight, n, m);
-		
-		assertTrue(Arrays.equals(new int[] { 0, 1 }, newPoint));
-	}
-	
-	@Test
-	public void testNextSpaceInMatrixClockwise2x2_0_1() {
-		final int ringWidth = 2;
-		final int ringHeight = 2;
-		final int n = 0;
-		final int m = 1;
-		
-		final int[] newPoint = RotateMatrix.nextSpaceInMatrixClockwise(ringWidth, ringHeight, n, m);
-		
-		assertTrue(Arrays.equals(new int[] { 0, 0 }, newPoint));
 	}
 	
 	@Test
@@ -200,6 +152,15 @@ public class RotateMatrixTests {
 		final boolean areEqual = RotateMatrix.matricesAreEqual(expectedMatrix, rotatedMatrix);
 		
 		assertTrue(areEqual);
+	}
+	
+	@Test
+	public void testUnwrapLoop() {
+		final int[][] matrix = new int[][] {{3, 6}, {2, 5}, {1, 5}, {2, 4}, {1, 9}, {8, 9}, {6, 1}, {8, 9}, {6, 6}, {6, 7}};
+		final int[] expectedLoop = new int[] { 3, 6, 5, 5, 4, 9, 9, 1, 9, 6, 7, 6, 6, 8, 6, 8, 1, 2, 1, 2 };
+		final int[] loop0 = RotateMatrix.unwrapLoop(matrix, 0);
+		
+		assertTrue(Arrays.equals(expectedLoop, loop0));
 	}
 
 }
