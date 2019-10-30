@@ -68,20 +68,6 @@ public class RotateMatrix {
 				newM += 1;
 			}
 		}
-//		else {
-//			if (m == 0) {
-//				newN += 1;
-//			}
-//			else if (m + 1 == ringHeight) {
-//				newN -= 1;
-//			}
-//			else if (n == 0) {
-//				newM -= 1;
-//			}
-//			else if (n + 1 == ringWidth) {
-//				newM += 1;
-//			}
-//		}
 		
 		return new int[] { newN, newM };
 	}
@@ -119,6 +105,22 @@ public class RotateMatrix {
 
 				for (int n = 0; n < ringWidth; n++) {
 					final int actualN = ringWidth - ringNumber - n - 1;
+					final int actualM = ringNumber + m;
+					
+					final int currentValue = matrix[actualN][actualM];
+					final int[] newLocation = nextSpaceInMatrixClockwise(ringWidth, ringHeight, n, m);
+					
+					final int newN = newLocation[0];
+					final int newM = newLocation[1];
+					
+					rotatedMatrix[newM][newN] = currentValue;
+				}
+
+				// Left
+				int n = 0;
+				
+				for (m = 0; m < ringWidth; m++) {
+					final int actualN = ringNumber + n;
 					final int actualM = ringNumber + m;
 					
 					final int currentValue = matrix[actualN][actualM];
