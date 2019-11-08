@@ -1,6 +1,8 @@
 package com.github.nathandelane.experiments.linkedlists;
 
-public final class LinkedListDataStructure<T> {
+import java.util.Iterator;
+
+public final class LinkedListDataStructure<T> implements Iterable<T> {
 	
 	ListNode<T> root;
 	
@@ -180,6 +182,11 @@ public final class LinkedListDataStructure<T> {
 		}
 	
 		return false;
+	}
+
+	@Override
+	public Iterator<T> iterator() {
+		return new LinkedListDataStructureIterator<>(this);
 	}
 	
 }
