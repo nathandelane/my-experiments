@@ -3,6 +3,7 @@ package com.github.nathandelane.experiments.rotatematrix;
 import java.math.BigDecimal;
 import java.math.MathContext;
 import java.math.RoundingMode;
+import java.util.function.Function;
 
 /**
  * Collection of functions for manipulating {@link IntMatrix}.
@@ -209,6 +210,155 @@ public final class IntMatrices {
   }
   
   /**
+   * Multiplies a single row by a scalar.
+   * @param matrix instance of {@link IntMatrix}
+   * @param rowIndex index of row to operate on
+   * @param scalar scalar value to multiply the row by
+   * @return new instance of {@link IntMatrix} containing updated values
+   */
+  public static IntMatrix multiply(final IntMatrix matrix, final int rowIndex, final int scalar) {
+    if (matrix == null) {
+      throw new IllegalStateException("Matrix cannot be null.");
+    }
+    if (rowIndex < 0) {
+      throw new IllegalStateException("RowIndex must be positive.");
+    }
+    
+    final int[][] newRepresentation = matrix.asTwoDimensionalArray();
+    
+    final int[] row = matrix.getRow(rowIndex);
+    final int[] newRow = new int[matrix.numberOfColumns];
+    
+    for (int i = 0; i < matrix.numberOfColumns; i++) {
+      final int value = row[i];
+      final int newValue = (value * scalar);
+      
+      newRow[i] = newValue;
+    }
+    
+    newRepresentation[rowIndex] = newRow;
+    
+    return new IntMatrix(newRepresentation);
+  }
+  
+  /**
+   * Multiplies a single row by a scalar.
+   * @param matrix instance of {@link IntMatrix}
+   * @param rowIndex index of row to operate on
+   * @param scalar scalar value to multiply the row by
+   * @return new instance of {@link IntMatrix} containing updated values
+   */
+  public static IntMatrix multiply(final IntMatrix matrix, final int rowIndex, final double scalar) {
+    if (matrix == null) {
+      throw new IllegalStateException("Matrix cannot be null.");
+    }
+    if (rowIndex < 0) {
+      throw new IllegalStateException("RowIndex must be positive.");
+    }
+    
+    final int[][] newRepresentation = matrix.asTwoDimensionalArray();
+    
+    final int[] row = matrix.getRow(rowIndex);
+    final int[] newRow = new int[matrix.numberOfColumns];
+    
+    for (int i = 0; i < matrix.numberOfColumns; i++) {
+      final double value = (double) row[i];
+      final double newValue = (value * scalar);
+      final int newValueTruncated = (int) newValue;
+      
+      newRow[i] = newValueTruncated;
+    }
+    
+    newRepresentation[rowIndex] = newRow;
+    
+    return new IntMatrix(newRepresentation);
+  }
+  
+  /**
+   * Multiplies a single row by a scalar
+   * @param matrix instance of {@link IntMatrix}
+   * @param rowIndex index of row to operate on
+   * @param scalar scalar value to multiply the row by
+   * @param roundingMode {@link RoundingMode}
+   * @return new instance of {@link IntMatrix} containing updated values
+   */
+  public static IntMatrix multiply(final IntMatrix matrix, final int rowIndex, final double scalar, final RoundingMode roundingMode) {
+    if (matrix == null) {
+      throw new IllegalStateException("Matrix cannot be null.");
+    }
+    if (rowIndex < 0) {
+      throw new IllegalStateException("RowIndex must be positive.");
+    }
+    
+    final int[][] newRepresentation = matrix.asTwoDimensionalArray();
+    
+    final int[] row = matrix.getRow(rowIndex);
+    final int[] newRow = new int[matrix.numberOfColumns];
+    
+    for (int i = 0; i < matrix.numberOfColumns; i++) {
+      final BigDecimal bdScalar = BigDecimal.valueOf(scalar);
+      final BigDecimal bdValue = BigDecimal.valueOf(row[i]);
+      final BigDecimal bdResult = bdValue.multiply(bdScalar, MathContext.DECIMAL128);
+      final BigDecimal bdResultRounded = bdResult.setScale(0, roundingMode);
+      
+      final int result = bdResultRounded.intValueExact();
+      
+      newRow[i] = result;
+    }
+    
+    newRepresentation[rowIndex] = newRow;
+    
+    return new IntMatrix(newRepresentation);
+  }
+  
+  /**
+   * Adds one row to another row, and updates the destination row, returning a new instance of {@link IntMatrix} containing the new data.
+   * @param matrix instance of {@link IntMatrix}
+   * @param firstRowIndex index of first row to add
+   * @param secondRowIndex index of second row to add
+   * @param destinationRowIndex index of row to add into
+   * @return new instance of {@link IntMatrix} containing the new data
+   */
+  public static IntMatrix add(final IntMatrix matrix, final int firstRowIndex, final int secondRowIndex, final int destinationRowIndex) {
+    if (matrix == null) {
+      throw new IllegalStateException("Matrix cannot be null.");
+    }
+    if (firstRowIndex < 0) {
+      throw new IllegalStateException("FirstRowIndex must be greater than zero.");
+    }
+    if (secondRowIndex < 0) {
+      throw new IllegalStateException("SecondRowIndex must be greater than zero.");
+    }
+    if (destinationRowIndex < 0) {
+      throw new IllegalStateException("DestinationRowIndex must be greater than zero.");
+    }
+    if (destinationRowIndex != firstRowIndex || destinationRowIndex != secondRowIndex) {
+      throw new IllegalStateException("DestinationRowIndex must be the same as either firstRowIndex or secondRowIndex.");
+    }
+    if (firstRowIndex == secondRowIndex) {
+      throw new IllegalStateException("FirstRowIndex cannot be the same as secondRowIndex.");
+    }
+    
+    final int[][] newRepresentation = matrix.asTwoDimensionalArray();
+    
+    final int[] firstRow = matrix.getRow(firstRowIndex);
+    final int[] secondRow = matrix.getRow(secondRowIndex);
+    final int[] newRow = new int[matrix.numberOfColumns];
+    
+    for (int columnIndex = 0; columnIndex < matrix.numberOfColumns; columnIndex++) {
+      final int left = firstRow[columnIndex];
+      final int right = secondRow[columnIndex];
+      final int result = (left + right);
+      
+      newRow[columnIndex] = result;
+    }
+    
+    newRepresentation[destinationRowIndex] = newRow;
+    
+    return new IntMatrix(newRepresentation);
+  }
+  
+  /**
    * Add two matrices. Matrices are addable if the number of columns and rows match acress the {@code first} and {@code second} 
    * matrices. Otherwise a {@link MatricesNotAddableException} can be thrown.
    * @param non-null {@link IntMatrix}
@@ -272,6 +422,36 @@ public final class IntMatrices {
         final int firstValue = first.get(rowIndex, columnIndex);
         final int secondValue = negatedSecond.get(rowIndex, columnIndex);
         final int newValue = (firstValue + secondValue);
+        
+        newMatrix[rowIndex][columnIndex] = newValue;
+      }
+    }
+    
+    return new IntMatrix(newMatrix);
+  }
+  
+  /**
+   * Applies a single {@link Function} {@code f} to all values of the matrix and returns a new matrix containing the updated values.
+   * @param matrix instance of {@link IntMatrix}
+   * @param f function to apply
+   * @return new instance of {@link IntMatrix} containing updated values
+   */
+  public static IntMatrix applyFunction(final IntMatrix matrix, final Function<Integer, Integer> f) {
+    if (matrix == null) {
+      throw new IllegalStateException("Matrix cannot be null.");
+    }
+    if (f == null) {
+      throw new IllegalStateException("Function f cannot be null.");
+    }
+    
+    final int numberOfRows = matrix.numberOfRows;
+    final int numberOfColumns = matrix.numberOfColumns;
+    final int[][] newMatrix = new int[numberOfRows][numberOfColumns];
+    
+    for (int rowIndex = 0; rowIndex < numberOfRows; rowIndex++) {
+      for (int columnIndex = 0; columnIndex < numberOfColumns; columnIndex++) {
+        final int value = matrix.get(rowIndex, columnIndex);
+        final int newValue = f.apply(value);
         
         newMatrix[rowIndex][columnIndex] = newValue;
       }
@@ -375,6 +555,35 @@ public final class IntMatrices {
     }
     
     return areAddable;
+  }
+  
+  /**
+   * Swaps two rows in a matrix with each other.
+   * @param matrix instance of {@link IntMatrix}
+   * @param firstRowIndex index of first row to swap
+   * @param secondRowIndex index of second row to swap
+   * @return new instance of {@link IntMatrix} containing updated data
+   */
+  public static IntMatrix swapRows(final IntMatrix matrix, final int firstRowIndex, final int secondRowIndex) {
+    if (matrix == null) {
+      throw new IllegalStateException("Matrix cannot be null.");
+    }
+    if (firstRowIndex < 0) {
+      throw new IllegalStateException("FirstRowIndex cannot be negative.");
+    }
+    if (secondRowIndex < 0) {
+      throw new IllegalStateException("SecondRowIndex cannot be negative.");
+    }
+    
+    final int[][] newRepresentation = matrix.asTwoDimensionalArray();
+    
+    final int[] firstRow = matrix.getRow(firstRowIndex);
+    final int[] secondRow = matrix.getRow(secondRowIndex);
+    
+    newRepresentation[firstRowIndex] = secondRow;
+    newRepresentation[secondRowIndex] = firstRow;
+    
+    return new IntMatrix(newRepresentation);
   }
   
 }

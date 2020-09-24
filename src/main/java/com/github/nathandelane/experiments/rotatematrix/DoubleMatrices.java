@@ -1,5 +1,7 @@
 package com.github.nathandelane.experiments.rotatematrix;
 
+import java.util.function.Function;
+
 /**
  * Collection of functions for manipulating {@link DoubleMatrix}.
  * @author nathandelane
@@ -138,6 +140,71 @@ public final class DoubleMatrices {
   }
   
   /**
+   * Multiplies a single row by a scalar.
+   * @param matrix instance of {@link DoubleMatrix}
+   * @param rowIndex index of row to operate on
+   * @param scalar scalar value to multiply the row by
+   * @return new instance of {@link DoubleMatrix} containing updated values
+   */
+  public static DoubleMatrix multiply(final DoubleMatrix matrix, final int rowIndex, final int scalar) {
+    if (matrix == null) {
+      throw new IllegalStateException("Matrix cannot be null.");
+    }
+    if (rowIndex < 0) {
+      throw new IllegalStateException("RowIndex must be positive.");
+    }
+    
+    final double[][] newRepresentation = matrix.asTwoDimensionalArray();
+    
+    final double[] row = matrix.getRow(rowIndex);
+    final double[] newRow = new double[matrix.numberOfColumns];
+    
+    for (int i = 0; i < matrix.numberOfColumns; i++) {
+      final double value = row[i];
+      final double newValue = (value * scalar);
+      
+      newRow[i] = newValue;
+    }
+    
+    newRepresentation[rowIndex] = newRow;
+    
+    return new DoubleMatrix(newRepresentation);
+  }
+  
+  /**
+   * Multiplies a single row by a scalar.
+   * @param matrix instance of {@link DoubleMatrix}
+   * @param rowIndex index of row to operate on
+   * @param scalar scalar value to multiply the row by
+   * @return new instance of {@link DoubleMatrix} containing updated values
+   */
+  public static DoubleMatrix multiply(final DoubleMatrix matrix, final int rowIndex, final double scalar) {
+    if (matrix == null) {
+      throw new IllegalStateException("Matrix cannot be null.");
+    }
+    if (rowIndex < 0) {
+      throw new IllegalStateException("RowIndex must be positive.");
+    }
+    
+    final double[][] newRepresentation = matrix.asTwoDimensionalArray();
+    
+    final double[] row = matrix.getRow(rowIndex);
+    final double[] newRow = new double[matrix.numberOfColumns];
+    
+    for (int i = 0; i < matrix.numberOfColumns; i++) {
+      final double value = (double) row[i];
+      final double newValue = (value * scalar);
+      final int newValueTruncated = (int) newValue;
+      
+      newRow[i] = newValueTruncated;
+    }
+    
+    newRepresentation[rowIndex] = newRow;
+    
+    return new DoubleMatrix(newRepresentation);
+  }
+  
+  /**
    * Multiply two matrices. Matrices are multipliable if the number of columns in the {@code first} matrix is equal to the 
    * number of rows in the {@code second} matrix. Otherwise a {@link MatricesNotMultipliableException} can be thrown.
    * @param first non-null {@link DoubleMatrix}
@@ -170,6 +237,53 @@ public final class DoubleMatrices {
     }
     
     return new DoubleMatrix(newMatrix);
+  }
+  
+  /**
+   * Adds one row to another row, and updates the destination row, returning a new instance of {@link DoubleMatrix} containing the new data.
+   * @param matrix instance of {@link DoubleMatrix}
+   * @param firstRowIndex index of first row to add
+   * @param secondRowIndex index of second row to add
+   * @param destinationRowIndex index of row to add into
+   * @return new instance of {@link DoubleMatrix} containing the new data
+   */
+  public static DoubleMatrix add(final DoubleMatrix matrix, final int firstRowIndex, final int secondRowIndex, final int destinationRowIndex) {
+    if (matrix == null) {
+      throw new IllegalStateException("Matrix cannot be null.");
+    }
+    if (firstRowIndex < 0) {
+      throw new IllegalStateException("FirstRowIndex must be greater than zero.");
+    }
+    if (secondRowIndex < 0) {
+      throw new IllegalStateException("SecondRowIndex must be greater than zero.");
+    }
+    if (destinationRowIndex < 0) {
+      throw new IllegalStateException("DestinationRowIndex must be greater than zero.");
+    }
+    if (destinationRowIndex != firstRowIndex || destinationRowIndex != secondRowIndex) {
+      throw new IllegalStateException("DestinationRowIndex must be the same as either firstRowIndex or secondRowIndex.");
+    }
+    if (firstRowIndex == secondRowIndex) {
+      throw new IllegalStateException("FirstRowIndex cannot be the same as secondRowIndex.");
+    }
+    
+    final double[][] newRepresentation = matrix.asTwoDimensionalArray();
+    
+    final double[] firstRow = matrix.getRow(firstRowIndex);
+    final double[] secondRow = matrix.getRow(secondRowIndex);
+    final double[] newRow = new double[matrix.numberOfColumns];
+    
+    for (int columnIndex = 0; columnIndex < matrix.numberOfColumns; columnIndex++) {
+      final double left = firstRow[columnIndex];
+      final double right = secondRow[columnIndex];
+      final double result = (left + right);
+      
+      newRow[columnIndex] = result;
+    }
+    
+    newRepresentation[destinationRowIndex] = newRow;
+    
+    return new DoubleMatrix(newRepresentation);
   }
   
   /**
@@ -236,6 +350,36 @@ public final class DoubleMatrices {
         final double firstValue = first.get(rowIndex, columnIndex);
         final double secondValue = negatedSecond.get(rowIndex, columnIndex);
         final double newValue = (firstValue + secondValue);
+        
+        newMatrix[rowIndex][columnIndex] = newValue;
+      }
+    }
+    
+    return new DoubleMatrix(newMatrix);
+  }
+  
+  /**
+   * Applies a single {@link Function} {@code f} to all values of the matrix and returns a new matrix containing the updated values.
+   * @param matrix instance of {@link DoubleMatrix}
+   * @param f function to apply
+   * @return new instance of {@link DoubleMatrix} containing updated values
+   */
+  public static DoubleMatrix applyFunction(final DoubleMatrix matrix, final Function<Double, Double> f) {
+    if (matrix == null) {
+      throw new IllegalStateException("Matrix cannot be null.");
+    }
+    if (f == null) {
+      throw new IllegalStateException("Function f cannot be null.");
+    }
+    
+    final int numberOfRows = matrix.numberOfRows;
+    final int numberOfColumns = matrix.numberOfColumns;
+    final double[][] newMatrix = new double[numberOfRows][numberOfColumns];
+    
+    for (int rowIndex = 0; rowIndex < numberOfRows; rowIndex++) {
+      for (int columnIndex = 0; columnIndex < numberOfColumns; columnIndex++) {
+        final double value = matrix.get(rowIndex, columnIndex);
+        final double newValue = f.apply(value);
         
         newMatrix[rowIndex][columnIndex] = newValue;
       }
@@ -339,6 +483,35 @@ public final class DoubleMatrices {
     }
     
     return areAddable;
+  }
+  
+  /**
+   * Swaps two rows in a matrix with each other.
+   * @param matrix instance of {@link DoubleMatrix}
+   * @param firstRowIndex index of first row to swap
+   * @param secondRowIndex index of second row to swap
+   * @return new instance of {@link DoubleMatrix} containing updated data
+   */
+  public static DoubleMatrix swapRows(final DoubleMatrix matrix, final int firstRowIndex, final int secondRowIndex) {
+    if (matrix == null) {
+      throw new IllegalStateException("Matrix cannot be null.");
+    }
+    if (firstRowIndex < 0) {
+      throw new IllegalStateException("FirstRowIndex cannot be negative.");
+    }
+    if (secondRowIndex < 0) {
+      throw new IllegalStateException("SecondRowIndex cannot be negative.");
+    }
+    
+    final double[][] newRepresentation = matrix.asTwoDimensionalArray();
+    
+    final double[] firstRow = matrix.getRow(firstRowIndex);
+    final double[] secondRow = matrix.getRow(secondRowIndex);
+    
+    newRepresentation[firstRowIndex] = secondRow;
+    newRepresentation[secondRowIndex] = firstRow;
+    
+    return new DoubleMatrix(newRepresentation);
   }
   
 }

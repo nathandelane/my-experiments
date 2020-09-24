@@ -156,12 +156,13 @@ public class IntMatrixTests {
   }
   
   @Test
-  public void test() {
-    final IntMatrix v = new IntMatrix(new int[][] { { -3, 2, 3, -2 }, { 3, 3, 1, 1 } });
-    final IntMatrix t = new IntMatrix(new int[][] { { 3, 0 }, { 0, 3 } });
-    final IntMatrix r = IntMatrices.multiply(t,  v);
+  public void testSwapRows() {
+    final IntMatrix m = new IntMatrix(new int[][] { { -3, 2, 3, -2 }, { 3, 3, 1, 1 } });
+    final IntMatrix expectedResult = new IntMatrix(new int[][] { { 3, 3, 1, 1 }, { -3, 2, 3, -2 } });
     
-    System.out.println(IntMatrices.asString(r));
+    final IntMatrix r = IntMatrices.swapRows(m, 0, 1);
+    
+    assertEquals(expectedResult, r);
   }
 
 }
