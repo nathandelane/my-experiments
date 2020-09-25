@@ -586,4 +586,21 @@ public final class IntMatrices {
     return new IntMatrix(newRepresentation);
   }
   
+  /**
+   * Converts a {@link IntMatrix} to an {@link DoubleMatrix}.
+   * @param matrix instance of {@link IntMatrix}
+   * @return instance of {@link DoubleMatrix}
+   */
+  public static DoubleMatrix asDoubleMatrix(final IntMatrix matrix) {
+    final double[][] doubleMatrix = new double[matrix.numberOfRows][matrix.numberOfColumns];
+    
+    for (int rI = 0; rI < matrix.numberOfRows; rI++) {
+      for (int cI = 0; cI <matrix.numberOfColumns; cI++) {
+        doubleMatrix[rI][cI] = matrix.get(rI, cI).doubleValue();
+      }
+    }
+    
+    return new DoubleMatrix(doubleMatrix);
+  }
+  
 }

@@ -6,7 +6,7 @@ import java.util.Arrays;
  * Represents a matrix of {@code double} values.
  * @author nathandelane
  */
-public class DoubleMatrix implements NumberMatrix<Double> {
+public class DoubleMatrix {
   
   private final double[] internalRepresentation;
   
@@ -61,7 +61,6 @@ public class DoubleMatrix implements NumberMatrix<Double> {
    * @param columnIndex column index
    * @return value at {@code [rowIndex][columnIndex]}
    */
-  @Override
   public Double get(final int rowIndex, final int columnIndex) {
     return internalRepresentation[(rowIndex * numberOfColumns) + columnIndex];
   }

@@ -6,7 +6,7 @@ import java.util.Arrays;
  * Represents a matrix of {@code int} values.
  * @author nathandelane
  */
-public class IntMatrix implements NumberMatrix<Integer> {
+public class IntMatrix {
   
   private final int[] internalRepresentation;
   
@@ -61,7 +61,6 @@ public class IntMatrix implements NumberMatrix<Integer> {
    * @param columnIndex column index
    * @return value at {@code [rowIndex][columnIndex]}
    */
-  @Override
   public Integer get(final int rowIndex, final int columnIndex) {
     return internalRepresentation[(rowIndex * numberOfColumns) + columnIndex];
   }

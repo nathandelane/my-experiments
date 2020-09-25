@@ -7,7 +7,7 @@ import java.util.Arrays;
  * @author nathandelane
  *
  */
-public class IntFunctionMatrix implements FunctionMatrix<IntFunction> {
+public class IntFunctionMatrix {
 
   private final IntFunction[] internalRepresentation;
   
@@ -62,7 +62,6 @@ public class IntFunctionMatrix implements FunctionMatrix<IntFunction> {
    * @param columnIndex column index
    * @return value at {@code [rowIndex][columnIndex]}
    */
-  @Override
   public IntFunction get(final int rowIndex, final int columnIndex) {
     return internalRepresentation[(rowIndex * numberOfColumns) + columnIndex];
   }
