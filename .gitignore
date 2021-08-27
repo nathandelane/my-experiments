@@ -6,3 +6,7 @@
 target
 bin
 
+# IntelliJ
+.idea
+*.iml
+
