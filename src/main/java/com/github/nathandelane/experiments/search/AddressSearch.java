@@ -31,8 +31,7 @@ public class AddressSearch {
     final int char1 = twoCharCountryCode.charAt(0);
     final int char2 = twoCharCountryCode.charAt(1);
 
-    //final String newNumber = String.format("%d%d", char1, char2);
-    final int result = ((char1 << 5) + char2) - 2000;//Integer.parseInt(newNumber);
+    final int result = ((char1 << 5) + char2) - 2000;
 
     return result;
   }
