@@ -7,7 +7,7 @@ public class ReallyBigSieve {
 
   public static final long MAX_SIZE = (Long.valueOf(Integer.MAX_VALUE) * Long.valueOf(Integer.MAX_VALUE));
 
-  private final List<Boolean[]> data;
+  private final List<boolean[]> data;
 
   private long size;
 
@@ -29,7 +29,7 @@ public class ReallyBigSieve {
     final long remainder = (numberOfElements % Long.valueOf(Integer.MAX_VALUE));
 
     if (numberOfArrays > 0) {
-      final Boolean[] ba = new Boolean[Integer.MAX_VALUE];
+      final boolean[] ba = new boolean[Integer.MAX_VALUE];
 
       for (long l = 0; l < numberOfArrays; l++) {
         data.add(ba.clone());
@@ -37,7 +37,7 @@ public class ReallyBigSieve {
     }
 
     if (remainder > 0) {
-      final Boolean[] rest = new Boolean[(int) remainder];
+      final boolean[] rest = new boolean[(int) remainder];
 
       data.add(rest);
     }
