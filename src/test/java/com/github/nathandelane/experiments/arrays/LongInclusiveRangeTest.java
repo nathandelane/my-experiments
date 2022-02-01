@@ -10,23 +10,23 @@ public class LongInclusiveRangeTest {
   public void testSingleElementRange() {
     final LongInclusiveRange r = new LongInclusiveRange(23L);
 
-    assertEquals(r.getStart(), r.getEnd());
+    assertEquals(r.getLow(), r.getHigh());
   }
 
   @Test
   public void testCreation() {
     final LongInclusiveRange r = new LongInclusiveRange(12L, 25L);
 
-    assertEquals(12L, r.getStart());
-    assertEquals(25L, r.getEnd());
+    assertTrue(Long.compare(12L, r.getLow()) == 0);
+    assertTrue(Long.compare(25L, r.getHigh()) == 0);
   }
 
   @Test
   public void testReversedCreation() {
     final LongInclusiveRange r = new LongInclusiveRange(25L, 12L);
 
-    assertEquals(12L, r.getStart());
-    assertEquals(25L, r.getEnd());
+    assertTrue(Long.compare(12L, r.getLow()) == 0);
+    assertTrue(Long.compare(25L, r.getHigh()) == 0);
   }
 
   @Test
@@ -58,10 +58,63 @@ public class LongInclusiveRangeTest {
   }
 
   @Test
-  public void testIsNextToRangeStart() {
+  public void testIsNextToRangeLow() {
     final LongInclusiveRange r = new LongInclusiveRange(12L, 25L);
 
-    assertTrue(r.isNextToRangeStart(11L));
+    assertTrue(r.isNextToRangeLow(11L));
+  }
+
+  @Test
+  public void testIsNotNextToRangeLow() {
+    final LongInclusiveRange r = new LongInclusiveRange(12L, 25L);
+
+    assertFalse(r.isNextToRangeLow(10L));
+  }
+
+  @Test
+  public void testIsNextToRangeHigh() {
+    final LongInclusiveRange r = new LongInclusiveRange(12L, 25L);
+
+    assertTrue(r.isNextToRangeHigh(26L));
+  }
+
+  @Test
+  public void testIsNotNextToRangeHigh() {
+    final LongInclusiveRange r = new LongInclusiveRange(12L, 25L);
+
+    assertFalse(r.isNextToRangeHigh(27L));
+  }
+
+  @Test
+  public void testRangeIsInRangeSingleElement() {
+    final LongInclusiveRange r1 = new LongInclusiveRange(-3L, -3L);
+    final LongInclusiveRange r2 = new LongInclusiveRange(-3L, -3L);
+
+    assertTrue(r1.isInRange(r2));
+  }
+
+  @Test
+  public void testRangeIsNotInRangeSingleElement() {
+    final LongInclusiveRange r1 = new LongInclusiveRange(-3L, -3L);
+    final LongInclusiveRange r2 = new LongInclusiveRange(-4L, -4L);
+
+    assertFalse(r1.isInRange(r2));
+  }
+
+  @Test
+  public void testRangeIsInRange() {
+    final LongInclusiveRange r1 = new LongInclusiveRange(-99L, 3_001L);
+    final LongInclusiveRange r2 = new LongInclusiveRange(0, -10L);
+
+    assertTrue(r1.isInRange(r2));
+  }
+
+  @Test
+  public void testRangeIsNotInRange() {
+    final LongInclusiveRange r1 = new LongInclusiveRange(-99L, 3_001L);
+    final LongInclusiveRange r2 = new LongInclusiveRange(0, -100L);
+
+    assertFalse(r1.isInRange(r2));
   }
 
 }
