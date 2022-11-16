@@ -71,7 +71,7 @@ public class IntMatrix {
    * @return array of values contained in row
    */
   public int[] getRow(final int rowIndex) {
-    final int[] row = Arrays.copyOfRange(internalRepresentation, ((rowIndex * numberOfColumns) + 0), ((rowIndex * numberOfColumns) + numberOfColumns));
+    final int[] row = Arrays.copyOfRange(internalRepresentation, ((rowIndex * numberOfColumns)), ((rowIndex * numberOfColumns) + numberOfColumns));
     
     return row;
   }

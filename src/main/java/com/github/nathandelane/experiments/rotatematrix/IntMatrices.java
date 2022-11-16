@@ -19,8 +19,8 @@ public final class IntMatrices {
   /**
    * Creates a new {@link IntMatrix} copy based on an int arrat with dimensions.
    * @param newInternalRepresentation new integer array representing new matrix.
-   * @param rows number of rows
-   * @param columns number of columns
+   * @param numberOfRows number of rows
+   * @param numberOfColumns number of columns
    */
   public static IntMatrix matrixOf(final int[] newInternalRepresentation, final int numberOfRows, final int numberOfColumns) {
     if (newInternalRepresentation == null) {

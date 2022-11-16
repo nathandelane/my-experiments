@@ -19,17 +19,19 @@ public class LongInclusiveRange implements Range<Long> {
     this.high = Math.max(start, end);
   }
 
+  @Override
   public Long getLow() {
     return low;
   }
 
+  @Override
   public Long getHigh() {
     return high;
   }
 
   @Override
   public boolean isInRange(final Long value) {
-    return Long.compare(value,low) >= 0 && Long.compare(value, high) <= 0;
+    return value != null && ((value - high) * (value - low) <= 0);
   }
 
   @Override
