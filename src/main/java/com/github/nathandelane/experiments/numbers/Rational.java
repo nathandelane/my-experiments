@@ -10,31 +10,45 @@ public class Rational {
     Map.entry("25", new Rational(1, 4)),
     Map.entry("2", new Rational(1, 5)),
     Map.entry("16666666666666666", new Rational(1, 6)),
+    Map.entry("1666666666666667", new Rational(1, 6)),
     Map.entry("14285714285714285", new Rational(1, 7)),
+    Map.entry("1428571428571428", new Rational(1, 7)),
     Map.entry("125", new Rational(1, 8)),
     Map.entry("1111111111111111", new Rational(1, 9)),
+    Map.entry("111111111111111", new Rational(1, 9)),
     Map.entry("1", new Rational(1, 10)),
     Map.entry("6666666666666666", new Rational(2, 3)),
+    Map.entry("666666666666667", new Rational(2, 3)),
     Map.entry("4", new Rational(2, 5)),
     Map.entry("2857142857142857", new Rational(2, 7)),
+    Map.entry("285714285714285", new Rational(2, 7)),
     Map.entry("2222222222222222", new Rational(2, 9)),
+    Map.entry("222222222222222", new Rational(2, 9)),
     Map.entry("75", new Rational(3, 4)),
     Map.entry("6", new Rational(3, 5)),
     Map.entry("42857142857142855", new Rational(3, 7)),
+    Map.entry("4285714285714285", new Rational(3, 7)),
     Map.entry("375", new Rational(3, 8)),
     Map.entry("3", new Rational(3, 10)),
     Map.entry("8", new Rational(4, 5)),
     Map.entry("5714285714285714", new Rational(4, 7)),
+    Map.entry("571428571428571", new Rational(4, 7)),
     Map.entry("4444444444444444", new Rational(4, 9)),
+    Map.entry("444444444444444", new Rational(4, 9)),
     Map.entry("8333333333333334", new Rational(5, 6)),
+    Map.entry("833333333333333", new Rational(5, 6)),
     Map.entry("7142857142857143", new Rational(5, 7)),
+    Map.entry("714285714285714", new Rational(5, 7)),
     Map.entry("625", new Rational(5, 8)),
-    Map.entry("5555555555555556", new Rational(5, 9)),
+    Map.entry("5555555555555555", new Rational(5, 9)),
+    Map.entry("555555555555556", new Rational(5, 9)),
     Map.entry("8571428571428571", new Rational(6, 7)),
     Map.entry("875", new Rational(7, 8)),
-    Map.entry("7777777777777778", new Rational(7, 9)),
+    Map.entry("7777777777777777", new Rational(7, 9)),
+    Map.entry("777777777777778", new Rational(7, 9)),
     Map.entry("7", new Rational(7, 10)),
     Map.entry("8888888888888888", new Rational(8, 9)),
+    Map.entry("888888888888889", new Rational(8, 9)),
     Map.entry("9", new Rational(9, 10))
   );
 
@@ -190,7 +204,7 @@ public class Rational {
         final long denominator = Math.round(Math.pow(10.0, (double) lengthOfDecimalPart));
         final long wholePartTimesDenominator = (wholePart * denominator);
         final Rational wholePartAsRational = new Rational(wholePartTimesDenominator, denominator);
-        final Rational decimalPartAsRational = new Rational(decimalPart, denominator);
+        final Rational decimalPartAsRational = new Rational(decimalPart, denominator).reduce();
 
         return wholePartAsRational.add(decimalPartAsRational).reduce();
       }

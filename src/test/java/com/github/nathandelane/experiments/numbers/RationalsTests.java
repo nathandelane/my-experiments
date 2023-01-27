@@ -82,6 +82,16 @@ public class RationalsTests {
   }
 
   @Test
+  public void testFromDouble6() {
+    final double d = 1.0 + (1.0 / 6.0);
+    final Rational r = Rational.fromDouble(d);
+    final Rational expected = new Rational(7, 6);
+
+    assertNotNull(r);
+    assertEquals(expected, r);
+  }
+
+  @Test
   public void testFromDoubleWholeNumber() {
     final double d = 24.0;
     final Rational r = Rational.fromDouble(d);
@@ -240,6 +250,24 @@ public class RationalsTests {
     final double expected = 0.75;
 
     assertTrue(Double.compare(expected, d) == 0);
+  }
+
+  @Test
+  public void testAsDouble2() {
+    final Rational r = new Rational(3, 3);
+    final double d = r.asDouble();
+    final double expected = 1.0;
+
+    assertTrue(Double.compare(expected, d) == 0);
+  }
+
+  @Test
+  public void testToString1() {
+    final Rational r = new Rational(3, 4);
+    final String s = r.toString();
+    final String expected = "3/4";
+
+    assertEquals(expected, s);
   }
 
   @Ignore
