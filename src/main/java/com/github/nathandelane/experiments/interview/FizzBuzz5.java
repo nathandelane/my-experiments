@@ -1,7 +1,14 @@
 package com.github.nathandelane.experiments.interview;
 
-import java.util.Arrays;
-
+/**
+ * This implementation of FIzzBuzz avoids division and modulus by essentially populating a sieve:
+ * <ol>
+ *   <li>Set all elements of array to index + 1 (arrays start with zero, but we want 1-100)</li>
+ *   <li>Set all of the multiples of three by skipping elements three at a time, then setting to "Fizz"</li>
+ *   <li>Set all of the multiples of five by skipping elements five at a time, check if the element already
+ *   equals "Fizz", and if so, then set to "FizzBuzz", otherwise set to "Buzz"</li>
+ * </ol>
+ */
 public class FizzBuzz5 {
 
   private FizzBuzz5() { }

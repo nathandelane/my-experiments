@@ -1,5 +1,8 @@
 package com.github.nathandelane.experiments.interview;
 
+/**
+ * Very straight forward method, using main, concatenation, and modulus.
+ */
 public class FizzBuzz2 {
 
   public static void main(final String[] args) {

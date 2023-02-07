@@ -2,6 +2,9 @@ package com.github.nathandelane.experiments.interview;
 
 import java.util.stream.IntStream;
 
+/**
+ * A relatively standard way of doing FizzBuzz with concatenation, modulus, and negative check.
+ */
 public class FizzBuzz3 {
 
   private FizzBuzz3() { }
@@ -14,8 +17,8 @@ public class FizzBuzz3 {
     return i % 5 == 0;
   }
 
-  boolean isMultipleOfThreeAndFive(final int i) {
-    return isMultipleOfThree(i) && isMultipleOfFive(i);
+  boolean isMultipleOfThreeOrFive(final int i) {
+    return isMultipleOfThree(i) || isMultipleOfFive(i);
   }
 
   String getOutputForI(final int i) {
@@ -27,7 +30,7 @@ public class FizzBuzz3 {
     if (isMultipleOfFive(i)) {
       sb.append("Buzz");
     }
-    if (!isMultipleOfThreeAndFive(i)) {
+    if (!isMultipleOfThreeOrFive(i)) {
       sb.append(i);
     }
 
