@@ -14,7 +14,7 @@ public class FizzBuzz5 {
     return numbers;
   }
 
-  private String[] setMultipleOfFive(final String[] numbers) {
+  private String[] setMultiplesOfFive(final String[] numbers) {
     for (int i = 5; i <= numbers.length; i += 5) {
       if (numbers[(i - 1)].equals("Fizz")) {
         numbers[(i - 1)] = "FizzBuzz";
@@ -34,7 +34,7 @@ public class FizzBuzz5 {
       numbers[(i - 1)] = Integer.toString(i);
     }
 
-    final String[] fizzBuzzedNumbers = setMultipleOfFive(setMultiplesOfThree(numbers));
+    final String[] fizzBuzzedNumbers = setMultiplesOfFive(setMultiplesOfThree(numbers));
 
     for (final String num : fizzBuzzedNumbers) {
       System.out.println(num);
