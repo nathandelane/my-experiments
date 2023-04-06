@@ -3,8 +3,7 @@ package com.github.nathandelane.experiments.numbers;
 import org.junit.Ignore;
 import org.junit.Test;
 
-import java.util.HashSet;
-import java.util.Set;
+import java.util.*;
 
 import static org.junit.Assert.*;
 
@@ -246,7 +245,7 @@ public class RationalsTests {
   @Test
   public void testAsDouble1() {
     final Rational r = new Rational(3, 4);
-    final double d = r.asDouble();
+    final double d = r.doubleValue();
     final double expected = 0.75;
 
     assertTrue(Double.compare(expected, d) == 0);
@@ -255,7 +254,7 @@ public class RationalsTests {
   @Test
   public void testAsDouble2() {
     final Rational r = new Rational(3, 3);
-    final double d = r.asDouble();
+    final double d = r.doubleValue();
     final double expected = 1.0;
 
     assertTrue(Double.compare(expected, d) == 0);
@@ -268,6 +267,68 @@ public class RationalsTests {
     final String expected = "3/4";
 
     assertEquals(expected, s);
+  }
+
+  @Test
+  public void testCompareToAreEqual1() {
+    final Rational r1 = new Rational(1, 3);
+    final Rational r2 = new Rational(3, 9);
+    final int expected = 0;
+    final int actual = r1.compareTo(r2);
+
+    assertTrue(String.format("r1=%s r2=%s", r1, r2), actual == expected);
+  }
+
+  @Test
+  public void testCompareToAreEqual2() {
+    final Rational r1 = new Rational(1, 4);
+    final Rational r2 = Rational.fromDouble(0.25);
+    final int expected = 0;
+    final int actual = r1.compareTo(r2);
+
+    assertTrue(String.format("r1=%s r2=%s", r1, r2), actual == expected);
+  }
+
+  @Test
+  public void testCompareToLessThan1() {
+    final Rational r1 = new Rational(1, 4);
+    final Rational r2 = new Rational(1, 3);
+    final int expected = -1;
+    final int actual = r1.compareTo(r2);
+
+    assertTrue(String.format("r1=%s r2=%s", r1, r2), actual == expected);
+  }
+
+  @Test
+  public void testCompareToGreaterThan1() {
+    final Rational r1 = new Rational(1, 3);
+    final Rational r2 = new Rational(1, 4);
+    final int expected = 1;
+    final int actual = r1.compareTo(r2);
+
+    assertTrue(String.format("r1=%s r2=%s", r1, r2), actual == expected);
+  }
+
+  @Test
+  public void testCompareToBySort() {
+    final List<Rational> listOfRationals = Arrays.asList(
+      new Rational(1, 2),
+      new Rational(1, 3),
+      new Rational(7, 12),
+      new Rational(2, 9),
+      new Rational(5, 10)
+    );
+    final List<Rational> expected = Arrays.asList(
+      new Rational(2, 9),
+      new Rational(1, 3),
+      new Rational(1, 2),
+      new Rational(5, 10),
+      new Rational(7, 12)
+    );
+
+    Collections.sort(listOfRationals);
+
+    assertEquals(String.format("Sorted: %s%nExpected: %s", expected, listOfRationals), expected, listOfRationals);
   }
 
   @Ignore

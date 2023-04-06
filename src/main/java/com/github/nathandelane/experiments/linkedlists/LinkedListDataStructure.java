@@ -5,6 +5,8 @@ import java.util.Iterator;
 public final class LinkedListDataStructure<T> implements Iterable<T> {
 	
 	ListNode<T> root;
+
+	public LinkedListDataStructure() { }
 	
 	public LinkedListDataStructure(final Iterable<T> values) {
 		if (values != null) {
@@ -182,6 +184,10 @@ public final class LinkedListDataStructure<T> implements Iterable<T> {
 		}
 	
 		return false;
+	}
+
+	public ListNode<T> getRoot() {
+		return root;
 	}
 
 	@Override

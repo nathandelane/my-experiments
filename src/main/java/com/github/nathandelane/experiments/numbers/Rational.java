@@ -2,7 +2,7 @@ package com.github.nathandelane.experiments.numbers;
 
 import java.util.Map;
 
-public class Rational {
+public class Rational extends Number implements Comparable<Rational> {
 
   private static final Map<String, Rational> DECIMAL_TO_RATIONAL_CACHE = Map.ofEntries(
     Map.entry("5", new Rational(1, 2)),
@@ -67,13 +67,6 @@ public class Rational {
       this.denominator = denominator;
       this.numerator = numerator;
     }
-  }
-
-  public double asDouble() {
-    final double doubleNumerator = Double.longBitsToDouble(numerator);
-    final double doubleDenominator = Double.longBitsToDouble(denominator);
-
-    return (doubleNumerator / doubleDenominator);
   }
 
   public Rational invert() {
@@ -147,6 +140,10 @@ public class Rational {
     final long newDenominator = (denominator / gcf);
 
     return new Rational(newNumerator, newDenominator);
+  }
+
+  public boolean isNegative() {
+    return (Math.signum(numerator) * Math.signum(denominator)) < 0;
   }
 
   @Override
@@ -238,4 +235,34 @@ public class Rational {
     return ((left * right) / (greatestCommonFactor(left, right)));
   }
 
+  @Override
+  public int intValue() {
+    return (int) longValue();
+  }
+
+  @Override
+  public long longValue() {
+    return (long) doubleValue();
+  }
+
+  @Override
+  public float floatValue() {
+    return (float) doubleValue();
+  }
+
+  @Override
+  public double doubleValue() {
+    final double doubleNumerator = Double.longBitsToDouble(numerator);
+    final double doubleDenominator = Double.longBitsToDouble(denominator);
+
+    return (doubleNumerator / doubleDenominator);
+  }
+
+  @Override
+  public int compareTo(final Rational other) {
+    if (this.equals(other)) return 0;
+    if ((this.subtract(other)).isNegative()) return -1;
+
+    return 1;
+  }
 }
