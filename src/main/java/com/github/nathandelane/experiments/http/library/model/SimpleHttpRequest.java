@@ -1,10 +1,8 @@
-package com.github.nathandelane.experiments.http.library;
+package com.github.nathandelane.experiments.http.library.model;
 
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
-import static com.github.nathandelane.experiments.http.library.HttpConstants.*;
+import static com.github.nathandelane.experiments.http.library.model.HttpConstants.*;
 
 public class SimpleHttpRequest {
 
@@ -16,24 +14,28 @@ public class SimpleHttpRequest {
 
   private final String host;
 
-  private final Map<String, String> queryStringParameters;
+  private final QueryStringParameters queryStringParameters;
 
   private final HttpHeaders headers;
+
+  private final String body;
 
   private SimpleHttpRequest(
     final String httpMethod,
     final String path,
     final String protocolAndVersion,
     final String host,
-    final Map<String, String> queryStringParameters,
-    final HttpHeaders headers
+    final QueryStringParameters queryStringParameters,
+    final HttpHeaders headers,
+    final String body
   ) {
     this.httpMethod = httpMethod;
     this.path = path;
     this.protocolAndVersion = protocolAndVersion;
     this.host = host;
-    this.queryStringParameters = Collections.unmodifiableMap(queryStringParameters);
+    this.queryStringParameters = queryStringParameters;
     this.headers = headers;
+    this.body = body;
   }
 
   public String getHttpMethod() {
@@ -52,7 +54,7 @@ public class SimpleHttpRequest {
     return host;
   }
 
-  public Map<String, String> getQueryStringParameters() {
+  public QueryStringParameters getQueryStringParameters() {
     return queryStringParameters;
   }
 
@@ -72,6 +74,14 @@ public class SimpleHttpRequest {
     return headers.getValues(HEADER_ACCEPT).iterator().next();
   }
 
+  public String getBody() {
+    return body;
+  }
+
+  public WebForm getBodyAsWebForm() {
+    return new WebForm(body);
+  }
+
   @Override
   public String toString() {
     return "SimpleHttpRequest{" +
@@ -81,19 +91,22 @@ public class SimpleHttpRequest {
       ", host='" + host + '\'' +
       ", queryStringParameters=" + queryStringParameters +
       ", headers=" + headers +
+      ", body=" + body +
       '}';
   }
 
-  public static SimpleHttpRequest parse(final String request) {
-    final String[] requestLines = request.split(HTTP_NEW_LINE);
-    final String[] firstLine = requestLines[0].split(" ");
+  public static SimpleHttpRequest parse(final String request, final int contentLength) {
+    final List<String> requestTokens = tokenizeRequest(request);
+    final int requestTokensLength = requestTokens.size();
+    final String[] firstLine = requestTokens.get(0).split(" ");
     final String httpMethod = firstLine[0];
     final String pathAndQueryString = firstLine[1];
     final String protocolAndVersion = firstLine[2];
-    final String host = requestLines[1].split(" ")[1];
+    final String host = requestTokens.get(1).split(" ")[1]; // HTTP 1.1 only
+    final String body = requestTokens.get(requestTokensLength - 1);
 
     final String[] pathAndQueryStringParts = pathAndQueryString.split("\\?");
-    final Map<String, String> queryStringParameters = new HashMap<>();
+    final QueryStringParameters queryStringParameters = new QueryStringParameters();
 
     if (pathAndQueryStringParts.length > 1) {
       final String queryString = pathAndQueryStringParts[1];
@@ -104,16 +117,19 @@ public class SimpleHttpRequest {
         final String parameter = queryStringParams[queryStringParameterIndex];
         final String[] parameterParts = parameter.split("=");
 
-        queryStringParameters.put(parameterParts[0], parameterParts[1]);
+        queryStringParameters.putValue(parameterParts[0], parameterParts[1]);
       }
     }
 
-    final int numberOfRequestLines = requestLines.length;
+    final int numberOfRequestLines = requestTokens.size();
     final HttpHeaders headers = new HttpHeaders();
 
-    for (int lineIndex = 2; lineIndex < numberOfRequestLines; lineIndex++) {
-      final String nextLine = requestLines[lineIndex];
-      final String[] nextLineParts = nextLine.split(": ");
+    for (int lineIndex = 2; lineIndex < (numberOfRequestLines - 1); lineIndex++) {
+      final String nextLine = requestTokens.get(lineIndex);
+
+      if (nextLine.equals("")) break;
+
+      final String[] nextLineParts = nextLine.split(":\\s+");
 
       if (nextLineParts.length == 1) {
         headers.putValue(nextLineParts[0], null);
@@ -126,16 +142,58 @@ public class SimpleHttpRequest {
       }
     }
 
+    // Get content by length from end of request.
+
     final SimpleHttpRequest simpleHttpRequest = new SimpleHttpRequest(
       httpMethod,
       pathAndQueryStringParts[0],
       protocolAndVersion,
       host,
       queryStringParameters,
-      headers
+      headers,
+      body
     );
 
     return simpleHttpRequest;
+  }
+
+  static List<String> tokenizeRequest(final String request) {
+    final List<String> tokens = new ArrayList<>();
+    final char[] reqChars = request.toCharArray();
+    final int reqCharsLength = reqChars.length;
+
+    final StringBuilder tokenBuilder = new StringBuilder();
+
+    for (int index = 0; index < reqCharsLength; index++) {
+      final char next = reqChars[index];
+
+      if (next == '\r') {
+        final String strTok = tokenBuilder.toString();
+
+        tokens.add(strTok);
+        tokenBuilder.setLength(0);
+
+        if (reqChars[index + 1] == '\n') {
+          if (reqChars[index + 2] == '\r' && reqChars[index + 3] == '\n') {
+            index += 4;
+
+            final String body = request.substring(index);
+
+            tokens.add(body);
+
+            index += body.length();
+          }
+          else {
+            index++;
+          }
+        }
+      }
+      else {
+        tokenBuilder.append(next);
+      }
+    }
+
+    return Collections.unmodifiableList(tokens);
   }
 
 }

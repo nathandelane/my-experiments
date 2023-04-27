@@ -1,4 +1,4 @@
-package com.github.nathandelane.experiments.http.library;
+package com.github.nathandelane.experiments.http.library.model;
 
 public class HttpStatusAndMessage {
 

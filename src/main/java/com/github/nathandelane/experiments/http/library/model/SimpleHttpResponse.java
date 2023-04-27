@@ -1,12 +1,11 @@
-package com.github.nathandelane.experiments.http.library;
+package com.github.nathandelane.experiments.http.library.model;
 
-import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
-import static com.github.nathandelane.experiments.http.library.HttpConstants.HEADER_CONTENT_TYPE;
-import static com.github.nathandelane.experiments.http.library.HttpConstants.HTTP_NEW_LINE;
+import static com.github.nathandelane.experiments.http.library.model.HttpConstants.HEADER_CONTENT_TYPE;
+import static com.github.nathandelane.experiments.http.library.model.HttpConstants.HTTP_NEW_LINE;
 
 public class SimpleHttpResponse {
 
@@ -113,7 +112,9 @@ public class SimpleHttpResponse {
 
       boolean isFirst = true;
 
-      for (final String nextValue : entry.getValue()) {
+      final Set<String> values = entry.getValue();
+
+      for (final String nextValue : values) {
         if (!isFirst) headerValues.append(",");
 
         headerValues.append(nextValue);
@@ -121,7 +122,7 @@ public class SimpleHttpResponse {
         isFirst = false;
       }
 
-      sb.append(String.format("%s: %s%s", entry.getKey(), entry.getValue(), HTTP_NEW_LINE));
+      sb.append(String.format("%s: %s%s", entry.getKey(), headerValues, HTTP_NEW_LINE));
     }
 
     sb.append(HTTP_NEW_LINE);

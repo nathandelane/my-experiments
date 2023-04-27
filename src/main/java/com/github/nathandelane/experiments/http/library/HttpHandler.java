@@ -1,20 +1,20 @@
 package com.github.nathandelane.experiments.http.library;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.OutputStream;
+import com.github.nathandelane.experiments.http.library.model.HttpHeaders;
+import com.github.nathandelane.experiments.http.library.model.SimpleHttpRequest;
+import com.github.nathandelane.experiments.http.library.model.SimpleHttpResponse;
+import com.github.nathandelane.experiments.http.library.paths.RequestMapping;
+
+import java.io.*;
 import java.net.Socket;
-import java.util.HashMap;
 import java.util.Map;
 
-import static com.github.nathandelane.experiments.http.library.CommonHttpResponses.HTTP_404_NOT_FOUND;
-import static com.github.nathandelane.experiments.http.library.ContentTypes.TEXT_PLAIN;
-import static com.github.nathandelane.experiments.http.library.HttpConstants.*;
+import static com.github.nathandelane.experiments.http.library.model.CommonHttpResponses.HTTP_404_NOT_FOUND;
+import static com.github.nathandelane.experiments.http.library.model.CommonHttpResponses.HTTP_500_SERVER_ERROR;
+import static com.github.nathandelane.experiments.http.library.model.ContentTypes.TEXT_PLAIN;
+import static com.github.nathandelane.experiments.http.library.model.HttpConstants.*;
 
 public class HttpHandler implements Runnable {
-
-  private static final Map<RequestMethodAndPath, RequestHandler> REQUEST_MAPPING = new HashMap<>();
 
   private final Socket socket;
 
@@ -24,38 +24,88 @@ public class HttpHandler implements Runnable {
 
   @Override
   public void run() {
-    handleRequest();
+    try {
+      handleRequest();
+    } catch (IOException e) {
+      e.printStackTrace();
+    }
   }
 
-  public void handleRequest() {
+  public void handleRequest() throws IOException {
     System.out.format("Handling request...%n%n");
 
-    try (final BufferedReader br = new BufferedReader(new InputStreamReader(socket.getInputStream()))) {
+    InputStream br = null;
+
+    try {
+      br = socket.getInputStream();
+
       final StringBuilder sb = new StringBuilder();
+      final StringBuilder lineBuilder = new StringBuilder();
 
-      String line = null;
+      int contentLength = 0;
+      int byteFromStream = 0;
+      int newLineCount = 0;
 
-      while (!(line = br.readLine()).isBlank()) {
-        sb.append(line).append(HTTP_NEW_LINE);
+      while ((byteFromStream = br.read()) >= 0) {
+        final char ch = (char) byteFromStream;
+
+        if (ch == '\n') newLineCount++;
+        if (ch != '\r' && ch != '\n') newLineCount = 0;
+
+        if (newLineCount > 0 && lineBuilder.length() > 0) {
+          lineBuilder.append(ch);
+
+          final String line = lineBuilder.toString();
+
+          if (line.startsWith("Content-Length: ")) {
+            final String length = line.substring("Content-Length: ".length()).trim();
+
+            contentLength = Integer.parseInt(length);
+          }
+
+          sb.append(line);
+
+          if (line.equals("\r\n")) break;
+
+          lineBuilder.setLength(0);
+        } else {
+          lineBuilder.append(ch);
+        }
+      }
+
+      if (contentLength > 0) {
+        final byte[] content = br.readNBytes(contentLength);
+        final String strFromBytes = new String(content);
+        sb.append(strFromBytes);
       }
 
       final String request = sb.toString();
-      final SimpleHttpRequest simpleHttpRequest = SimpleHttpRequest.parse(request);
+      final SimpleHttpRequest simpleHttpRequest = SimpleHttpRequest.parse(request, contentLength);
 
       System.out.format("------ REQUEST ------%n%n%s%n", simpleHttpRequest);
 
-      final RequestMethodAndPath requestMethodAndPath = new RequestMethodAndPath(simpleHttpRequest.getHttpMethod(), simpleHttpRequest.getPath());
+      RequestHandlerContainer requestHandlerContainer = RequestMapping.resolvePath(simpleHttpRequest.getHttpMethod(), simpleHttpRequest.getPath());
 
-      RequestHandler requestHandler = REQUEST_MAPPING.get(requestMethodAndPath);
-      if (requestHandler == null) requestHandler = getNotFoundHandlerForRequest(simpleHttpRequest);
+      if (requestHandlerContainer.requestHandler == null) requestHandlerContainer = getNotFoundHandlerForRequest(simpleHttpRequest);
 
-      final SimpleHttpResponse simpleHttpResponse = requestHandler.handle(simpleHttpRequest);
+      final SimpleHttpResponse simpleHttpResponse = requestHandlerContainer.apply(simpleHttpRequest);
 
       System.out.format("------ RESPONSE ------%n%n%s%n", simpleHttpResponse);
 
       handleResponse(simpleHttpResponse);
-    } catch (final IOException e) {
-      throw new RuntimeException(e);
+    } catch (final Exception e) {
+      final SimpleHttpResponse response = getServerErrorHandlerForRequest(e).handle(null, null);
+
+      try {
+        handleResponse(response);
+      } catch (final IOException ex) {
+        throw new RuntimeException(ex);
+      }
+    }
+    finally {
+      if (br != null) {
+        br.close();
+      }
     }
   }
 
@@ -66,15 +116,15 @@ public class HttpHandler implements Runnable {
     socket.close();
   }
 
-  private RequestHandler getNotFoundHandlerForRequest(final SimpleHttpRequest simpleHttpRequest) {
-    return new RequestHandler() {
+  private RequestHandlerContainer getNotFoundHandlerForRequest(final SimpleHttpRequest simpleHttpRequest) {
+    final RequestHandler requestHandler = new RequestHandler() {
       @Override
-      public SimpleHttpResponse handle(final SimpleHttpRequest simpleHttpRequest) {
+      public SimpleHttpResponse handle(final SimpleHttpRequest simpleHttpRequest, final Map<String, String> variableMapping) {
         final String responseBody = String.format("No handler found for method: %s and path: %s%n", simpleHttpRequest.getHttpMethod(), simpleHttpRequest.getPath());
         final Integer length = responseBody.getBytes().length;
-        final Map<String, String> headers = new HashMap<>();
-        headers.put(HEADER_CONTENT_LENGTH, length.toString());
-        headers.put(HEADER_CONTENT_TYPE, "text/plain");
+        final HttpHeaders headers = new HttpHeaders();
+        headers.putValue(HEADER_CONTENT_LENGTH, length.toString());
+        headers.putValue(HEADER_CONTENT_TYPE, TEXT_PLAIN);
 
         return new SimpleHttpResponse(
           HTTP_404_NOT_FOUND,
@@ -84,12 +134,44 @@ public class HttpHandler implements Runnable {
         );
       }
     };
+
+    return new RequestHandlerContainer(requestHandler, null);
+  }
+
+  private RequestHandler getServerErrorHandlerForRequest(final Exception e) {
+    return new RequestHandler() {
+      @Override
+      public SimpleHttpResponse handle(final SimpleHttpRequest simpleHttpRequest, final Map<String, String> variablMapping) {
+        final String responseBody = String.format("Unexpected server error occurred! %s%n%s", e.getMessage(),getStackTraceAsString(e));
+        final Integer length = responseBody.getBytes().length;
+        final HttpHeaders headers = new HttpHeaders();
+        headers.putValue(HEADER_CONTENT_LENGTH, length.toString());
+        headers.putValue(HEADER_CONTENT_TYPE, TEXT_PLAIN);
+
+        return new SimpleHttpResponse(
+          HTTP_500_SERVER_ERROR,
+          TEXT_PLAIN,
+          headers,
+          responseBody
+        );
+      }
+
+      private String getStackTraceAsString(final Exception e) {
+        final StringBuilder stackTraceBuilder = new StringBuilder();
+        final StackTraceElement[] stackTraceElements = e.getStackTrace();
+
+        for(final StackTraceElement nextElement : stackTraceElements) {
+          stackTraceBuilder.append("  at ").append(nextElement.toString()).append(String.format("%n"));
+        }
+
+        return stackTraceBuilder.toString();
+      }
+
+    };
   }
 
   public static void mapRequest(final String httpMethod, final String path, final RequestHandler requestHandler) {
-    final RequestMethodAndPath requestMethodAndPath = new RequestMethodAndPath(httpMethod, path);
-
-    REQUEST_MAPPING.put(requestMethodAndPath, requestHandler);
+    RequestMapping.addRequestMapping(httpMethod, path, requestHandler);
   }
 
 }

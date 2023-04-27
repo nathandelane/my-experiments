@@ -1,4 +1,4 @@
-package com.github.nathandelane.experiments.http.library;
+package com.github.nathandelane.experiments.http.library.model;
 
 import java.util.*;
 
@@ -32,4 +32,10 @@ public class HttpHeaders {
     return headers.entrySet();
   }
 
+  @Override
+  public String toString() {
+    return "HttpHeaders{" +
+      "headers=" + headers +
+      '}';
+  }
 }
