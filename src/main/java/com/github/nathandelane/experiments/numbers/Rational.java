@@ -169,8 +169,8 @@ public class Rational extends Number implements Comparable<Rational> {
 
   @Override
   public int hashCode() {
-    int result = (int) (numerator ^ (numerator >>> 32));
-    result = 31 * result + (int) (denominator ^ (denominator >>> 32));
+    int result = Long.hashCode(numerator);
+    result = 31 * result + Long.hashCode(denominator);
     return result;
   }
 
@@ -265,4 +265,5 @@ public class Rational extends Number implements Comparable<Rational> {
 
     return 1;
   }
+
 }
