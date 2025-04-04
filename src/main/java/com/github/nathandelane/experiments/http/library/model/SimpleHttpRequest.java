@@ -1,6 +1,7 @@
 package com.github.nathandelane.experiments.http.library.model;
 
 import java.util.*;
+import java.util.concurrent.atomic.AtomicReference;
 
 import static com.github.nathandelane.experiments.http.library.model.HttpConstants.*;
 
@@ -12,8 +13,6 @@ public class SimpleHttpRequest {
 
   private final String protocolAndVersion;
 
-  private final String host;
-
   private final QueryStringParameters queryStringParameters;
 
   private final HttpHeaders headers;
@@ -24,7 +23,6 @@ public class SimpleHttpRequest {
     final String httpMethod,
     final String path,
     final String protocolAndVersion,
-    final String host,
     final QueryStringParameters queryStringParameters,
     final HttpHeaders headers,
     final String body
@@ -32,7 +30,6 @@ public class SimpleHttpRequest {
     this.httpMethod = httpMethod;
     this.path = path;
     this.protocolAndVersion = protocolAndVersion;
-    this.host = host;
     this.queryStringParameters = queryStringParameters;
     this.headers = headers;
     this.body = body;
@@ -48,10 +45,6 @@ public class SimpleHttpRequest {
 
   public String getProtocolAndVersion() {
     return protocolAndVersion;
-  }
-
-  public String getHost() {
-    return host;
   }
 
   public QueryStringParameters getQueryStringParameters() {
@@ -88,7 +81,6 @@ public class SimpleHttpRequest {
       "httpMethod='" + httpMethod + '\'' +
       ", path='" + path + '\'' +
       ", protocolAndVersion='" + protocolAndVersion + '\'' +
-      ", host='" + host + '\'' +
       ", queryStringParameters=" + queryStringParameters +
       ", headers=" + headers +
       ", body=" + body +
@@ -96,14 +88,15 @@ public class SimpleHttpRequest {
   }
 
   public static SimpleHttpRequest parse(final String request, final int contentLength) {
-    final List<String> requestTokens = tokenizeRequest(request);
+    final AtomicReference<String> outBody = new AtomicReference<>();
+    final List<String> requestTokens = tokenizeRequest(request, outBody);
     final int requestTokensLength = requestTokens.size();
     final String[] firstLine = requestTokens.get(0).split(" ");
     final String httpMethod = firstLine[0];
     final String pathAndQueryString = firstLine[1];
     final String protocolAndVersion = firstLine[2];
-    final String host = requestTokens.get(1).split(" ")[1]; // HTTP 1.1 only
-    final String body = requestTokens.get(requestTokensLength - 1);
+
+    final String body = outBody.get();
 
     final String[] pathAndQueryStringParts = pathAndQueryString.split("\\?");
     final QueryStringParameters queryStringParameters = new QueryStringParameters();
@@ -124,7 +117,7 @@ public class SimpleHttpRequest {
     final int numberOfRequestLines = requestTokens.size();
     final HttpHeaders headers = new HttpHeaders();
 
-    for (int lineIndex = 2; lineIndex < (numberOfRequestLines - 1); lineIndex++) {
+    for (int lineIndex = 1; lineIndex < (numberOfRequestLines - 1); lineIndex++) {
       final String nextLine = requestTokens.get(lineIndex);
 
       if (nextLine.equals("")) break;
@@ -148,7 +141,6 @@ public class SimpleHttpRequest {
       httpMethod,
       pathAndQueryStringParts[0],
       protocolAndVersion,
-      host,
       queryStringParameters,
       headers,
       body
@@ -157,7 +149,7 @@ public class SimpleHttpRequest {
     return simpleHttpRequest;
   }
 
-  static List<String> tokenizeRequest(final String request) {
+  static List<String> tokenizeRequest(final String request, final AtomicReference<String> outBody) {
     final List<String> tokens = new ArrayList<>();
     final char[] reqChars = request.toCharArray();
     final int reqCharsLength = reqChars.length;
@@ -179,7 +171,7 @@ public class SimpleHttpRequest {
 
             final String body = request.substring(index);
 
-            tokens.add(body);
+            outBody.set(body);
 
             index += body.length();
           }

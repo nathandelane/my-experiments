@@ -4,30 +4,33 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
+import static com.github.nathandelane.experiments.chess.Constants.PLAYER_COLOR_BLACK;
+import static com.github.nathandelane.experiments.chess.Constants.PLAYER_COLOR_WHITE;
+
 public final class ChessPieces {
 
   private ChessPieces() { }
 
-  public static final ChessPiece WHITE_ROOK_1 = new ChessPiece("Rook", "R1", "white");
-  public static final ChessPiece WHITE_ROOK_2 = new ChessPiece("Rook", "R2", "white");
+  public static final ChessPiece WHITE_ROOK_1 = new ChessPiece("Rook", "R1", PLAYER_COLOR_WHITE);
+  public static final ChessPiece WHITE_ROOK_2 = new ChessPiece("Rook", "R2", PLAYER_COLOR_WHITE);
 
-  public static final ChessPiece WHITE_KNIGHT_1 = new ChessPiece("Knight", "K1", "white");
-  public static final ChessPiece WHITE_KNIGHT_2 = new ChessPiece("Knight", "K2", "white");
+  public static final ChessPiece WHITE_KNIGHT_1 = new ChessPiece("Knight", "K1", PLAYER_COLOR_WHITE);
+  public static final ChessPiece WHITE_KNIGHT_2 = new ChessPiece("Knight", "K2", PLAYER_COLOR_WHITE);
 
-  public static final ChessPiece WHITE_BISHOP_1 = new ChessPiece("Bishop", "B1", "white");
-  public static final ChessPiece WHITE_BISHOP_2 = new ChessPiece("Bishop", "B2", "white");
+  public static final ChessPiece WHITE_BISHOP_1 = new ChessPiece("Bishop", "B1", PLAYER_COLOR_WHITE);
+  public static final ChessPiece WHITE_BISHOP_2 = new ChessPiece("Bishop", "B2", PLAYER_COLOR_WHITE);
 
-  public static final ChessPiece WHITE_KING = new ChessPiece("King", "K", "white");
-  public static final ChessPiece WHITE_QUEEN = new ChessPiece("Queen", "Q", "white");
+  public static final ChessPiece WHITE_KING = new ChessPiece("King", "K", PLAYER_COLOR_WHITE);
+  public static final ChessPiece WHITE_QUEEN = new ChessPiece("Queen", "Q", PLAYER_COLOR_WHITE);
 
-  public static final ChessPiece WHITE_PAWN_1 = new ChessPiece("Pawn", "P1", "white");
-  public static final ChessPiece WHITE_PAWN_2 = new ChessPiece("Pawn", "P2", "white");
-  public static final ChessPiece WHITE_PAWN_3 = new ChessPiece("Pawn", "P3", "white");
-  public static final ChessPiece WHITE_PAWN_4 = new ChessPiece("Pawn", "P4", "white");
-  public static final ChessPiece WHITE_PAWN_5 = new ChessPiece("Pawn", "P5", "white");
-  public static final ChessPiece WHITE_PAWN_6 = new ChessPiece("Pawn", "P6", "white");
-  public static final ChessPiece WHITE_PAWN_7 = new ChessPiece("Pawn", "P7", "white");
-  public static final ChessPiece WHITE_PAWN_8 = new ChessPiece("Pawn", "P8", "white");
+  public static final ChessPiece WHITE_PAWN_1 = new ChessPiece("Pawn", "P1", PLAYER_COLOR_WHITE);
+  public static final ChessPiece WHITE_PAWN_2 = new ChessPiece("Pawn", "P2", PLAYER_COLOR_WHITE);
+  public static final ChessPiece WHITE_PAWN_3 = new ChessPiece("Pawn", "P3", PLAYER_COLOR_WHITE);
+  public static final ChessPiece WHITE_PAWN_4 = new ChessPiece("Pawn", "P4", PLAYER_COLOR_WHITE);
+  public static final ChessPiece WHITE_PAWN_5 = new ChessPiece("Pawn", "P5", PLAYER_COLOR_WHITE);
+  public static final ChessPiece WHITE_PAWN_6 = new ChessPiece("Pawn", "P6", PLAYER_COLOR_WHITE);
+  public static final ChessPiece WHITE_PAWN_7 = new ChessPiece("Pawn", "P7", PLAYER_COLOR_WHITE);
+  public static final ChessPiece WHITE_PAWN_8 = new ChessPiece("Pawn", "P8", PLAYER_COLOR_WHITE);
 
   public static final List<ChessPiece> ALL_WHITE_CHESS_PIECES = Collections.unmodifiableList(
     Arrays.asList(
@@ -36,26 +39,26 @@ public final class ChessPieces {
     )
   );
 
-  public static final ChessPiece BLACK_ROOK_1 = new ChessPiece("Rook", "R1", "black");
-  public static final ChessPiece BLACK_ROOK_2 = new ChessPiece("Rook", "R2", "black");
+  public static final ChessPiece BLACK_ROOK_1 = new ChessPiece("Rook", "R1", PLAYER_COLOR_BLACK);
+  public static final ChessPiece BLACK_ROOK_2 = new ChessPiece("Rook", "R2", PLAYER_COLOR_BLACK);
 
-  public static final ChessPiece BLACK_KNIGHT_1 = new ChessPiece("Knight", "K1", "black");
-  public static final ChessPiece BLACK_KNIGHT_2 = new ChessPiece("Knight", "K2", "black");
+  public static final ChessPiece BLACK_KNIGHT_1 = new ChessPiece("Knight", "K1", PLAYER_COLOR_BLACK);
+  public static final ChessPiece BLACK_KNIGHT_2 = new ChessPiece("Knight", "K2", PLAYER_COLOR_BLACK);
 
-  public static final ChessPiece BLACK_BISHOP_1 = new ChessPiece("Bishop", "B1", "black");
-  public static final ChessPiece BLACK_BISHOP_2 = new ChessPiece("Bishop", "B2", "black");
+  public static final ChessPiece BLACK_BISHOP_1 = new ChessPiece("Bishop", "B1", PLAYER_COLOR_BLACK);
+  public static final ChessPiece BLACK_BISHOP_2 = new ChessPiece("Bishop", "B2", PLAYER_COLOR_BLACK);
 
-  public static final ChessPiece BLACK_KING = new ChessPiece("King", "K", "black");
-  public static final ChessPiece BLACK_QUEEN = new ChessPiece("Queen", "Q", "black");
+  public static final ChessPiece BLACK_KING = new ChessPiece("King", "K", PLAYER_COLOR_BLACK);
+  public static final ChessPiece BLACK_QUEEN = new ChessPiece("Queen", "Q", PLAYER_COLOR_BLACK);
 
-  public static final ChessPiece BLACK_PAWN_1 = new ChessPiece("Pawn", "P1", "black");
-  public static final ChessPiece BLACK_PAWN_2 = new ChessPiece("Pawn", "P2", "black");
-  public static final ChessPiece BLACK_PAWN_3 = new ChessPiece("Pawn", "P3", "black");
-  public static final ChessPiece BLACK_PAWN_4 = new ChessPiece("Pawn", "P4", "black");
-  public static final ChessPiece BLACK_PAWN_5 = new ChessPiece("Pawn", "P5", "black");
-  public static final ChessPiece BLACK_PAWN_6 = new ChessPiece("Pawn", "P6", "black");
-  public static final ChessPiece BLACK_PAWN_7 = new ChessPiece("Pawn", "P7", "black");
-  public static final ChessPiece BLACK_PAWN_8 = new ChessPiece("Pawn", "P8", "black");
+  public static final ChessPiece BLACK_PAWN_1 = new ChessPiece("Pawn", "P1", PLAYER_COLOR_BLACK);
+  public static final ChessPiece BLACK_PAWN_2 = new ChessPiece("Pawn", "P2", PLAYER_COLOR_BLACK);
+  public static final ChessPiece BLACK_PAWN_3 = new ChessPiece("Pawn", "P3", PLAYER_COLOR_BLACK);
+  public static final ChessPiece BLACK_PAWN_4 = new ChessPiece("Pawn", "P4", PLAYER_COLOR_BLACK);
+  public static final ChessPiece BLACK_PAWN_5 = new ChessPiece("Pawn", "P5", PLAYER_COLOR_BLACK);
+  public static final ChessPiece BLACK_PAWN_6 = new ChessPiece("Pawn", "P6", PLAYER_COLOR_BLACK);
+  public static final ChessPiece BLACK_PAWN_7 = new ChessPiece("Pawn", "P7", PLAYER_COLOR_BLACK);
+  public static final ChessPiece BLACK_PAWN_8 = new ChessPiece("Pawn", "P8", PLAYER_COLOR_BLACK);
 
   public static final List<ChessPiece> ALL_BLACK_CHESS_PIECES = Collections.unmodifiableList(
     Arrays.asList(

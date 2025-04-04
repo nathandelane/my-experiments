@@ -9,7 +9,6 @@ import java.io.*;
 import java.net.Socket;
 import java.util.Map;
 
-import static com.github.nathandelane.experiments.http.library.model.CommonHttpResponses.HTTP_404_NOT_FOUND;
 import static com.github.nathandelane.experiments.http.library.model.CommonHttpResponses.HTTP_500_SERVER_ERROR;
 import static com.github.nathandelane.experiments.http.library.model.ContentTypes.TEXT_PLAIN;
 import static com.github.nathandelane.experiments.http.library.model.HttpConstants.*;
@@ -86,9 +85,10 @@ public class HttpHandler implements Runnable {
 
       RequestHandlerContainer requestHandlerContainer = RequestMapping.resolvePath(simpleHttpRequest.getHttpMethod(), simpleHttpRequest.getPath());
 
-      if (requestHandlerContainer.requestHandler == null) requestHandlerContainer = getNotFoundHandlerForRequest(simpleHttpRequest);
+      if (requestHandlerContainer.requestHandler == null) requestHandlerContainer = ErrorHandler.getNotFoundHandlerForRequest(simpleHttpRequest);
 
       final SimpleHttpResponse simpleHttpResponse = requestHandlerContainer.apply(simpleHttpRequest);
+      simpleHttpResponse.getHeaders().putValue("Server", "Leaf Server 0.1");
 
       System.out.format("------ RESPONSE ------%n%n%s%n", simpleHttpResponse);
 
@@ -113,30 +113,10 @@ public class HttpHandler implements Runnable {
     final OutputStream clientOutput = socket.getOutputStream();
     clientOutput.write(simpleHttpResponse.toBytes());
     clientOutput.flush();
-    socket.close();
+    socket.close(); // TODO: Handle keep-alive
   }
 
-  private RequestHandlerContainer getNotFoundHandlerForRequest(final SimpleHttpRequest simpleHttpRequest) {
-    final RequestHandler requestHandler = new RequestHandler() {
-      @Override
-      public SimpleHttpResponse handle(final SimpleHttpRequest simpleHttpRequest, final Map<String, String> variableMapping) {
-        final String responseBody = String.format("No handler found for method: %s and path: %s%n", simpleHttpRequest.getHttpMethod(), simpleHttpRequest.getPath());
-        final Integer length = responseBody.getBytes().length;
-        final HttpHeaders headers = new HttpHeaders();
-        headers.putValue(HEADER_CONTENT_LENGTH, length.toString());
-        headers.putValue(HEADER_CONTENT_TYPE, TEXT_PLAIN);
 
-        return new SimpleHttpResponse(
-          HTTP_404_NOT_FOUND,
-          TEXT_PLAIN,
-          headers,
-          responseBody
-        );
-      }
-    };
-
-    return new RequestHandlerContainer(requestHandler, null);
-  }
 
   private RequestHandler getServerErrorHandlerForRequest(final Exception e) {
     return new RequestHandler() {

@@ -1,7 +1,5 @@
 package com.github.nathandelane.experiments.http.library.model;
 
-import com.github.nathandelane.experiments.http.library.model.HttpStatusAndMessage;
-
 public final class CommonHttpResponses {
 
   private CommonHttpResponses() { }

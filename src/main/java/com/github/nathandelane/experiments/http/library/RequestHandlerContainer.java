@@ -3,6 +3,7 @@ package com.github.nathandelane.experiments.http.library;
 import com.github.nathandelane.experiments.http.library.model.SimpleHttpRequest;
 import com.github.nathandelane.experiments.http.library.model.SimpleHttpResponse;
 
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -17,7 +18,7 @@ public class RequestHandlerContainer {
     this.variableMapping = variableMapping == null ? new HashMap<>() : variableMapping;
   }
 
-  public SimpleHttpResponse apply(final SimpleHttpRequest simpleHttpRequest) {
+  public SimpleHttpResponse apply(final SimpleHttpRequest simpleHttpRequest) throws IOException {
     return requestHandler.handle(simpleHttpRequest, variableMapping);
   }
 

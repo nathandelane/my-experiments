@@ -2,6 +2,9 @@ package com.github.nathandelane.experiments.chess;
 
 import java.util.Objects;
 
+import static com.github.nathandelane.experiments.chess.Constants.PLAYER_COLOR_BLACK;
+import static com.github.nathandelane.experiments.chess.Constants.PLAYER_COLOR_WHITE;
+
 public class ChessPiece {
 
   private final String name;
@@ -48,6 +51,14 @@ public class ChessPiece {
       ", symbol='" + symbol + '\'' +
       ", color='" + color + '\'' +
       '}';
+  }
+
+  public static boolean isBlack(final String playerColor) {
+    return PLAYER_COLOR_BLACK.equalsIgnoreCase(playerColor.trim());
+  }
+
+  public static boolean isWhite(final String playerColor) {
+    return PLAYER_COLOR_WHITE.equalsIgnoreCase(playerColor.trim());
   }
 
 }
