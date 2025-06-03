@@ -146,25 +146,27 @@ import java.util.List;
  */
 public final class DimensionalArray<T> {
 
+	public static final int MAX_DIMENSIONS = 10;
+
 	// Visible for testing
 	final static List<NIntFunction> LIST_OF_FUNCTIONS;
 	static {
-		LIST_OF_FUNCTIONS = new ArrayList<>(10);
+		LIST_OF_FUNCTIONS = new ArrayList<>(MAX_DIMENSIONS);
 		// One dimension
-		LIST_OF_FUNCTIONS.add((dims, coord) -> coord);
+		LIST_OF_FUNCTIONS.add((dims, firstCoord) -> firstCoord);
 		// Second dimension
-		LIST_OF_FUNCTIONS.add((dims, coord) -> Math.multiplyExact(coord, dims[0]));
+		LIST_OF_FUNCTIONS.add((dims, secondCoord) -> Math.multiplyExact(secondCoord, dims[0]));
 		// Third dimension
-		LIST_OF_FUNCTIONS.add((dims, coord) -> Math.multiplyExact(
-			coord,
+		LIST_OF_FUNCTIONS.add((dims, thirdCoord) -> Math.multiplyExact(
+			thirdCoord,
 			Math.multiplyExact(
 				dims[0],
 				dims[1]
 			)
 		));
 		// Fourth
-		LIST_OF_FUNCTIONS.add((dims, coord) -> Math.multiplyExact(
-			coord,
+		LIST_OF_FUNCTIONS.add((dims, fourthCoord) -> Math.multiplyExact(
+			fourthCoord,
 			Math.multiplyExact(
 				Math.multiplyExact(
 					dims[0],
@@ -174,8 +176,8 @@ public final class DimensionalArray<T> {
 			)
 		));
 		// Fifth
-		LIST_OF_FUNCTIONS.add((dims, coord) -> Math.multiplyExact(
-			coord,
+		LIST_OF_FUNCTIONS.add((dims, fifthCoord) -> Math.multiplyExact(
+			fifthCoord,
 			Math.multiplyExact(
 				Math.multiplyExact(
 					Math.multiplyExact(
@@ -188,8 +190,8 @@ public final class DimensionalArray<T> {
 			)
 		));
 		// Sixth
-		LIST_OF_FUNCTIONS.add((dims, coord) -> Math.multiplyExact(
-			coord,
+		LIST_OF_FUNCTIONS.add((dims, sixthCoord) -> Math.multiplyExact(
+			sixthCoord,
 			Math.multiplyExact(
 				Math.multiplyExact(
 					Math.multiplyExact(
@@ -202,6 +204,104 @@ public final class DimensionalArray<T> {
 					dims[3]
 				),
 				dims[4]
+			)
+		));
+		// Seventh
+		LIST_OF_FUNCTIONS.add((dims, seventhCoord) -> Math.multiplyExact(
+			seventhCoord,
+			Math.multiplyExact(
+				Math.multiplyExact(
+					Math.multiplyExact(
+						Math.multiplyExact(
+							Math.multiplyExact(
+								dims[0],
+								dims[1]
+							),
+							dims[2]
+						),
+						dims[3]
+					),
+					dims[4]
+				)
+				, dims[5]
+			)
+		));
+		// Eighth
+		LIST_OF_FUNCTIONS.add((dims, eighthCoord) -> Math.multiplyExact(
+			eighthCoord,
+			Math.multiplyExact(
+				Math.multiplyExact(
+					Math.multiplyExact(
+						Math.multiplyExact(
+							Math.multiplyExact(
+								Math.multiplyExact(
+									dims[0],
+									dims[1]
+								),
+								dims[2]
+							),
+							dims[3]
+						),
+						dims[4]
+					),
+					dims[5]
+				),
+				dims[6]
+			)
+		));
+		// Nineth
+		LIST_OF_FUNCTIONS.add((dims, ninethCoord) -> Math.multiplyExact(
+			ninethCoord,
+			Math.multiplyExact(
+				Math.multiplyExact(
+					Math.multiplyExact(
+						Math.multiplyExact(
+							Math.multiplyExact(
+								Math.multiplyExact(
+									Math.multiplyExact(
+										dims[0],
+										dims[1]
+									),
+									dims[2]
+								),
+								dims[3]
+							),
+							dims[4]
+						),
+						dims[5]
+					),
+					dims[6]
+				),
+				dims[7]
+			)
+		));
+		// Tenth
+		LIST_OF_FUNCTIONS.add((dims, tenthCoord) -> Math.multiplyExact(
+			tenthCoord,
+			Math.multiplyExact(
+				Math.multiplyExact(
+					Math.multiplyExact(
+						Math.multiplyExact(
+							Math.multiplyExact(
+								Math.multiplyExact(
+									Math.multiplyExact(
+										Math.multiplyExact(
+											dims[0],
+											dims[1]
+										),
+										dims[2]
+									),
+									dims[3]
+								),
+								dims[4]
+							),
+							dims[5]
+						),
+						dims[6]
+					),
+					dims[7]
+				),
+				dims[8]
 			)
 		));
 	}
