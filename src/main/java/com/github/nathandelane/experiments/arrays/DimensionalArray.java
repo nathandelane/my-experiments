@@ -10,8 +10,8 @@ import java.util.List;
  * a single-dimensional array and mathematical formula to map coordinates onto it.</p>
  * <p>
  * For two dimensions the math for identifying a corresponding index in a single-dimensional array identifies a row-width,
- * a row-number, and a column-index in the row. For example, to find the index of coordination (4, 3), meaning x (column)
- * index is 4, and y (row) index is 3, in a zero-based indexed array with virtual dimensions of 5x5 the formula is:
+ * a row-number, and a column-index in the row. For example, to find the index of x-y-coordinates (4, 3), meaning {@code x} (column)
+ * index is 4, and {@code y} (row) index is 3, in a zero-based indexed array with virtual dimensions of 5x5 the formula is:
  * <div>
  *   <pre>(5 * 3) + 4 = 19</pre>
  * </div>
@@ -33,7 +33,7 @@ import java.util.List;
  * </p>
  * <p>
  *   In three dimensions things begin to become much more complicated. A three-dimensional cube of indices could look like the following
- *   with a set of x, y, and z coordinates, of 5x5x5:
+ *   with a set of {@code x}, {@code y}, and {@code z} coordinates, of 5x5x5:
  * <pre>
  * [
  *   0, 0, 0, 0, 0,
@@ -67,9 +67,9 @@ import java.util.List;
  *   0, 0, 0, 0, 0
  * ]
  * </pre>
- * In this example, x and y coordinates are inner-most, and z coordinates are the outer-most, i.e. each two-dimensional array is
- * contained in a z-coordinate. Thus, finding the coordinate (3, 2, 4) as an (x, y, z) tuple, we invert the tuple so that z represents
- * a set of 25 elements, a 5x5 array in the representation, and then we locate within that set the x and y coordinates in the same
+ * In this example, {@code x} and {@code y} coordinates are innermost, and {@code z} coordinates are the outer-most, i.e. each two-dimensional array is
+ * contained in a z-coordinate. Thus, finding the coordinate {@code (3, 2, 4)} as an {@code (x, y, z)} tuple, we invert the tuple so that z represents
+ * a set of 25 elements, a 5x5 array in the representation, and then we locate within that set the {@code x} and {@code y} coordinates in the same
  * way as before:
  * <div>
  *   <pre>(rowWidth * y) + x</pre>
@@ -80,7 +80,7 @@ import java.util.List;
  * </div>
  * In our example above we find the actual index as:
  * <div>
- *   <pre>(4 * (25)) + (2 * 5) + 3 = 113</pre>
+ *   <pre>(4 * (5 * 5)) + (2 * 5) + 3 = 113</pre>
  * </div>
  * Located as:
  * <pre>
@@ -89,31 +89,31 @@ import java.util.List;
  *   0, 0, 0, 0, 0,
  *   0, 0, 0, 0, 0,
  *   0, 0, 0, 0, 0,
- *   0, 0, 0, 0, 0, -- 24
- *   --
+ *   0, 0, 0, 0, 0, // 24
+ *   //
  *   0, 0, 0, 0, 0,
  *   0, 0, 0, 0, 0,
  *   0, 0, 0, 0, 0,
  *   0, 0, 0, 0, 0,
- *   0, 0, 0, 0, 0, -- 49
- *   --
+ *   0, 0, 0, 0, 0, // 49
+ *   //
  *   0, 0, 0, 0, 0,
  *   0, 0, 0, 0, 0,
  *   0, 0, 0, 0, 0,
  *   0, 0, 0, 0, 0,
- *   0, 0, 0, 0, 0, -- 74
- *   --
+ *   0, 0, 0, 0, 0, // 74
+ *   //
  *   0, 0, 0, 0, 0,
  *   0, 0, 0, 0, 0,
  *   0, 0, 0, 0, 0,
  *   0, 0, 0, 0, 0,
- *   0, 0, 0, 0, 0, -- 99
- *   --
+ *   0, 0, 0, 0, 0, // 99
+ *   //
  *   0, 0, 0, 0, 0,
  *   0, 0, 0, 0, 0,
- *   0, 0, 0, X, 0, -- [113]
+ *   0, 0, 0, X, 0, // [113]
  *   0, 0, 0, 0, 0,
- *   0, 0, 0, 0, 0 -- 124
+ *   0, 0, 0, 0, 0 // 124
  * ]
  * </pre>
  * </p>
@@ -122,16 +122,27 @@ import java.util.List;
  *   array.
  * </p>
  * <p>
- *   For two dimensions we simply have: <pre>(rowWidth * y) + x</pre>.
+ *   For two dimensions (e.g. {@code (x, y)}) we simply have: {@code (y * yWidth) + x}.
  * </p>
  * <p>
- *   For three dimensions: <pre>(z * (yWidth * xWidth)) + (y * yWidth) + x</pre>
+ *   For three (e.g. {@code (x, y, z)}) dimensions: {@code (z * (yWidth * xWidth)) + (y * yWidth) + x}.
  * </p>
  * <p>
- *   For four dimensions: <pre>(k * (zWidth * yWidth * xWidth)) + (z * (yWidth * xWidth)) + (y * yWidth) + x</pre>
+ *   For four dimensions (e.g. {@code (x, y, z, k)}): {@code (k * (zWidth * yWidth * xWidth)) + (z * (yWidth * xWidth)) + (y * yWidth) + x}.
  * </p>
  * <p>And so on ...</p>
- * @param <T>
+ * <p>The function of functions used to identify the linear index of an element in a uniform manner has a straight-forward
+ * pattern:
+ *   <ol>
+ *     <li>In the first dimension an index is the simplest case, for example {@code x}</li>
+ *     <li>In the second dimension an index is a product of the second component, for example {@code y} and the width of the y-component, or rows,
+ *   added to the first index, as illustrated above &mdash; given a rectangular region of size {@code x}-width and {@code y}-height
+ *   the equation for identifying the linear index of a point identified by {@code (x, y)} is {@code (y * yWidth) + x}</li>
+ *     <li>foregoing dimensions include the pattern of multiplying the next component of an ordered tuple with the product of the
+ *   remaining components' dimensions</li>
+ *   </ol>
+ * </p>
+ * @param <T> Generic type of collection
  */
 public final class DimensionalArray<T> {
 
@@ -197,8 +208,12 @@ public final class DimensionalArray<T> {
 
 	private final T[] internal;
 
-	private int[] dimensions;
+	private final int[] dimensions;
 
+	/**
+	 * Create an instance of this class.
+	 * @param dimensions an array of the dimensions in order of the array, which may range from a single dimension up to ten dimensions.
+	 */
 	public DimensionalArray(final int ... dimensions) {
 		if (dimensions.length > LIST_OF_FUNCTIONS.size()) throw new IllegalStateException(String.format("The maximum number of dimensions supported it %1$d, but you attempted to create a %2$d-dimensional array.", LIST_OF_FUNCTIONS.size(), dimensions.length));
 
@@ -213,14 +228,26 @@ public final class DimensionalArray<T> {
 		this.internal = (T[]) new Object[totalSize];
 	}
 
-	public void fill(T fillValue) {
+	/**
+	 * Fill the internal structure with some value of type {@code T}.
+	 * @param fillValue value to fill the internal structure.
+	 */
+	public void fill(final T fillValue) {
 		Arrays.fill(internal, fillValue);
 	}
 
+	/**
+	 * Fill the internal structure with the value null casted to type {@code T}.
+	 */
 	public void clear() {
 		Arrays.fill(internal, (T) null);
 	}
 
+	/**
+	 * Obtain the value of the element identified by the dimensions provided.
+	 * @param dimN array of dimensions, the number of which must match the number of dimensions for this instance.
+	 * @return the value at the located coordinates.
+	 */
 	public T get(final int ... dimN) {
 		if (dimN.length != dimensions.length) throw new IllegalStateException(String.format("DimensionalArray instance has %1$d dimensions, therefore %1$d indices must be provided", dimensions.length));
 		if (dimN.length >= LIST_OF_FUNCTIONS.size()) throw new IllegalStateException(String.format("Dimensions only supported up to %d.", LIST_OF_FUNCTIONS.size()));
@@ -230,6 +257,11 @@ public final class DimensionalArray<T> {
 		return internal[index];
 	}
 
+	/**
+	 * Set the value of the element identified by the dimensions provided.
+	 * @param value array of dimensions, the number of which must match the number of dimensions for this instance.
+	 * @param dimN the value to set at the desired coordinates.
+	 */
 	public void set(final T value, final int ... dimN) {
 		if (dimN.length != dimensions.length) throw new IllegalStateException(String.format("DimensionalArray instance has %1$d dimensions, therefore %1$d indices must be provided", dimensions.length));
 		if (dimN.length >= LIST_OF_FUNCTIONS.size()) throw new IllegalStateException(String.format("Dimensions only supported up to %d.", LIST_OF_FUNCTIONS.size()));
@@ -239,11 +271,24 @@ public final class DimensionalArray<T> {
 		internal[index] = value;
 	}
 
-	public int getIndex(final int ... dimN) {
+	/**
+	 * Calculate the linear index given a list of coordinates. This is visible for testing. If a provided index overflows the
+	 * corresponding zero-based dimensional width, then an {@code IllegalStateException} is thrown.
+	 * @param dimN array of dimensions, the number of which must match the number of dimensions for this instance.
+	 * @return an integer index to the internal structure.
+	 */
+	int getIndex(final int ... dimN) {
+		if (dimN.length != dimensions.length) throw new IllegalStateException(String.format("DimensionalArray instance has %1$d dimensions, therefore %1$d indices must be provided", dimensions.length));
+		if (dimN.length >= LIST_OF_FUNCTIONS.size()) throw new IllegalStateException(String.format("Dimensions only supported up to %d.", LIST_OF_FUNCTIONS.size()));
+
 		int index = 0;
 
 		for (int dimensionIndex = 0; dimensionIndex < dimN.length; dimensionIndex++) {
-			index += LIST_OF_FUNCTIONS.get(dimensionIndex).apply(dimensions, dimN[dimensionIndex]);
+			final int nextIndex = dimN[dimensionIndex];
+
+			if (nextIndex >= dimensions[dimensionIndex]) throw new IllegalStateException(String.format("Dimensional component %1$d for dimension %2$d is greater than width of that dimension, which is %3$d.", nextIndex, dimensionIndex, dimensions[dimensionIndex]));
+
+			index += LIST_OF_FUNCTIONS.get(dimensionIndex).apply(dimensions, nextIndex);
 		}
 
 		if (index >= internal.length) throw new IllegalStateException(String.format("Index %1$d is greater than array size: %2$d.", index, internal.length));
@@ -257,10 +302,10 @@ public final class DimensionalArray<T> {
 	interface NIntFunction {
 
 		/**
-		 *
-		 * @param dims Actual dimensions of internal array
-		 * @param coord coordinate, e.g. {@code x}-coordinate or {@code y}-coordinate
-		 * @return product
+		 * Apply calculation.
+		 * @param dims Actual dimensions of internal array.
+		 * @param coord coordinate, e.g. {@code x}-coordinate or {@code y}-coordinate.
+		 * @return results of the calculation.
 		 */
 		int apply(int[] dims, int coord);
 
