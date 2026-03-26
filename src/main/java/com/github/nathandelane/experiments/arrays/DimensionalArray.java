@@ -142,6 +142,10 @@ import java.util.List;
  *   remaining components' dimensions</li>
  *   </ol>
  * </p>
+ * <p>
+ *   This structure is not designed to be a graph or simplex, rather it is a densely packed n-dimensional cube-like structure for containing
+ *   linear data.
+ * </p>
  * @param <T> Generic type of collection
  */
 public final class DimensionalArray<T> {
@@ -315,7 +319,7 @@ public final class DimensionalArray<T> {
 	 * @param dimensions an array of the dimensions in order of the array, which may range from a single dimension up to ten dimensions.
 	 */
 	public DimensionalArray(final int ... dimensions) {
-		if (dimensions.length > LIST_OF_FUNCTIONS.size()) throw new IllegalStateException(String.format("The maximum number of dimensions supported it %1$d, but you attempted to create a %2$d-dimensional array.", LIST_OF_FUNCTIONS.size(), dimensions.length));
+		if (dimensions.length > LIST_OF_FUNCTIONS.size()) throw new IllegalStateException(String.format("The maximum number of dimensions supported is %1$d, but you attempted to create a %2$d-dimensional array.", LIST_OF_FUNCTIONS.size(), dimensions.length));
 
 		this.dimensions = dimensions;
 
